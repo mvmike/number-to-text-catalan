@@ -8,24 +8,24 @@ Static class. Usage example:
 
 ```java
 
-NumberToText.numberToText(1, "euro")
+NumberToText.get(1, "euro")
      -->  un euro
 
-NumberToText.numberToText(25.92, "euro")
+NumberToText.get(25.92, "euro")
      -->  vint-i-cinc euros amb noranta-dos cèntims
 
-NumberToText.numberToText(133.50, "euro")
+NumberToText.get(133.50, "euro")
      -->  cent trenta-tres euros amb cinquanta cèntims
 
-NumberToText.numberToText(755.13, "")
+NumberToText.get(755.13, "")
      -->  set-cents cinquanta-cinc amb tretze
 
-NumberToText.numberToText(1714, "euro")
+NumberToText.get(1714, "euro")
      -->  mil set-cents catorze euros
 
-NumberToText.numberToText(55891.75513, "")
+NumberToText.get(55891.75513, "")
      -->  cinquanta-cinc mil vuit-cents noranta-un amb setanta-sis
 
-NumberToText.numberToText(701060.1, "euro")
+NumberToText.get(701060.1, "euro")
      -->  set-cents un mil seixanta euros amb deu cèntims
 ```

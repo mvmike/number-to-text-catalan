@@ -1,6 +1,8 @@
 // Copyright (c) 2016, Miquel Martí <miquelmarti111@gmail.com>
 // See LICENSE for licensing information
-package mvmike;
+package cat.mvmike;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class NumberToText {
 
@@ -59,13 +61,13 @@ public class NumberToText {
      * @param currency (applies to integers, decimals are always cents. Can be empty)
      * @return string associated value
      */
-    public static String numberToText(final double number, final String currency) {
+    public static String get(final double number, final String currency) {
 
         checkMaxSize((int) number);
         checkThousandFlag((int) number);
         int decimals = (int) (Math.round(number % 1 * 100.0));
 
-        boolean hasCurrency = currency != null && !currency.isEmpty();
+        boolean hasCurrency = currency != null && !StringUtils.isEmpty(currency);
 
         String result = centMilers((int) number);
 
@@ -84,28 +86,63 @@ public class NumberToText {
 
     private static String unitat(final int number) {
 
-        if (number == 9)
-            return N_9;
-        if (number == 8)
-            return N_8;
-        if (number == 7)
-            return N_7;
-        if (number == 6)
-            return N_6;
-        if (number == 5)
-            return N_5;
-        if (number == 4)
-            return N_4;
-        if (number == 3)
-            return N_3;
-        if (number == 2)
-            return N_2;
-        if (number == 1)
-            return N_1;
-        if (THOUSAND_FLAG)
-            return "";
+        switch (number) {
 
-        return N_0;
+            case 9:
+                return N_9;
+            case 8:
+                return N_8;
+            case 7:
+                return N_7;
+            case 6:
+                return N_6;
+            case 5:
+                return N_5;
+            case 4:
+                return N_4;
+            case 3:
+                return N_3;
+            case 2:
+                return N_2;
+            case 1:
+                return N_1;
+
+            default:
+
+                if (THOUSAND_FLAG)
+                    return "";
+
+                return N_0;
+        }
+    }
+
+    private static String getBetweenTenAndTwenty(final int number) {
+
+        switch (number) {
+
+            case 10:
+                return N_10;
+            case 11:
+                return N_11;
+            case 12:
+                return N_12;
+            case 13:
+                return N_13;
+            case 14:
+                return N_14;
+            case 15:
+                return N_15;
+            case 16:
+                return N_16;
+            case 17:
+                return N_17;
+            case 18:
+                return N_18;
+            case 19:
+                return N_19;
+        }
+
+        return null;
     }
 
     private static String desena(final int number) {
@@ -153,39 +190,12 @@ public class NumberToText {
 
         } else if (number >= 10 && number <= 19) {
 
-            if (number == 10)
-                NUM_LETTER = N_10;
-
-            else if (number == 11)
-                NUM_LETTER = N_11;
-
-            else if (number == 12)
-                NUM_LETTER = N_12;
-
-            else if (number == 13)
-                NUM_LETTER = N_13;
-
-            else if (number == 14)
-                NUM_LETTER = N_14;
-
-            else if (number == 15)
-                NUM_LETTER = N_15;
-
-            else if (number == 16)
-                NUM_LETTER = N_16;
-
-            else if (number == 17)
-                NUM_LETTER = N_17;
-
-            else if (number == 18)
-                NUM_LETTER = N_18;
-
-            else if (number == 19)
-                NUM_LETTER = N_19;
+            NUM_LETTER = getBetweenTenAndTwenty(number);
 
         } else {
             NUM_LETTER = unitat(number);
         }
+
         return NUM_LETTER;
     }
 
@@ -284,7 +294,7 @@ public class NumberToText {
             NUM_LETTER_DM = desena(number / 1000).concat(SPACE + N_1000);
 
         else if (number > 10000 && number < 100000)
-            NUM_LETTER_DM = desena(number / 1000).concat(SPACE + N_1000 + (centenars(number % 1000).isEmpty() ? "" : SPACE))
+            NUM_LETTER_DM = desena(number / 1000).concat(SPACE + N_1000 + (StringUtils.isEmpty(centenars(number % 1000)) ? "" : SPACE))
                 .concat(centenars(number % 1000));
 
         else if (number < 10000)
@@ -299,7 +309,7 @@ public class NumberToText {
             NUM_LETTER_CM = N_100 + SPACE + N_1000;
 
         else if (number >= 100000 && number < 1000000)
-            NUM_LETTER_CM = centenars(number / 1000).concat(SPACE + N_1000 + (centenars(number % 1000).isEmpty() ? "" : SPACE))
+            NUM_LETTER_CM = centenars(number / 1000).concat(SPACE + N_1000 + (StringUtils.isEmpty(centenars(number % 1000)) ? "" : SPACE))
                 .concat(centenars(number % 1000));
 
         else if (number < 100000)

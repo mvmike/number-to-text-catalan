@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>mvmike</groupId>
+    <groupId>cat.mvmike</groupId>
     <artifactId>number-to-text-catalan</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
@@ -17,11 +17,17 @@
 
         <!--versions-->
         <java.version>1.8</java.version>
+        <lang3.version>3.4</lang3.version>
         <junit.version>4.12</junit.version>
 
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${lang3.version}</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
