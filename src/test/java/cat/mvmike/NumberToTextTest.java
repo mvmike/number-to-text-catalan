@@ -2,47 +2,55 @@
 // See LICENSE for licensing information
 package cat.mvmike;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import static cat.mvmike.NumberToText.MAX_VALUE;
+import static cat.mvmike.NumberToText.MAX_VALUE_ERROR;
+
+import java.security.InvalidParameterException;
+
 import org.junit.Test;
 
 public class NumberToTextTest {
 
     @Test
-    public void testInvalidLength() throws Exception {
+    public void testInvalidLength() {
 
-        NumberToText.get(999999, "");
+        NumberToText.get(MAX_VALUE - 1, "");
 
         try {
-            NumberToText.get(1000000, "");
-            Assert.fail();
-        } catch (Exception e) {
-            e.printStackTrace();
+            NumberToText.get(MAX_VALUE, "");
+            fail("should have exploded because of invalid length");
+
+        } catch (InvalidParameterException ipe) {
+            assertEquals(MAX_VALUE_ERROR, ipe.getMessage());
         }
     }
 
     @Test
     public void testRandomNumbers() throws Exception {
 
-        Assert.assertEquals(NumberToText.get(0.5, "euro"), "zero euros amb cinquanta cèntims");
+        assertEquals("zero euros amb cinquanta cèntims", NumberToText.get(0.5, "euro"));
 
-        Assert.assertEquals(NumberToText.get(1, "euro"), "un euro");
+        assertEquals("un euro", NumberToText.get(1, "euro"));
 
-        Assert.assertEquals(NumberToText.get(1.37, "euro"), "un euro amb trenta-set cèntims");
+        assertEquals("un euro amb trenta-set cèntims", NumberToText.get(1.37, "euro"));
 
-        Assert.assertEquals(NumberToText.get(25.92, "euro"), "vint-i-cinc euros amb noranta-dos cèntims");
+        assertEquals("vint-i-cinc euros amb noranta-dos cèntims", NumberToText.get(25.92, "euro"));
 
-        Assert.assertEquals(NumberToText.get(68.62, "euro"), "seixanta-vuit euros amb seixanta-dos cèntims");
+        assertEquals("seixanta-vuit euros amb seixanta-dos cèntims", NumberToText.get(68.62, "euro"));
 
-        Assert.assertEquals(NumberToText.get(133.50, "euro"), "cent trenta-tres euros amb cinquanta cèntims");
+        assertEquals("cent trenta-tres euros amb cinquanta cèntims", NumberToText.get(133.50, "euro"));
 
-        Assert.assertEquals(NumberToText.get(755.13, ""), "set-cents cinquanta-cinc amb tretze");
+        assertEquals("set-cents cinquanta-cinc amb tretze", NumberToText.get(755.13, ""));
 
-        Assert.assertEquals(NumberToText.get(1115.61, "euro"), "mil cent quinze euros amb seixanta-un cèntims");
+        assertEquals("mil cent quinze euros amb seixanta-un cèntims", NumberToText.get(1115.61, "euro"));
 
-        Assert.assertEquals(NumberToText.get(1714, "euro"), "mil set-cents catorze euros");
+        assertEquals("mil set-cents catorze euros", NumberToText.get(1714, "euro"));
 
-        Assert.assertEquals(NumberToText.get(55891.75513, ""), "cinquanta-cinc mil vuit-cents noranta-un amb setanta-sis");
+        assertEquals("cinquanta-cinc mil vuit-cents noranta-un amb setanta-sis", NumberToText.get(55891.75513, ""));
 
-        Assert.assertEquals(NumberToText.get(701060.1, "euro"), "set-cents un mil seixanta euros amb deu cèntims");
+        assertEquals("set-cents un mil seixanta euros amb deu cèntims", NumberToText.get(701060.1, "euro"));
     }
 }

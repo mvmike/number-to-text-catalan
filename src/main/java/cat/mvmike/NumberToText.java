@@ -2,60 +2,42 @@
 // See LICENSE for licensing information
 package cat.mvmike;
 
+import static cat.mvmike.NumberToText.Number.*;
+
+import java.security.InvalidParameterException;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class NumberToText {
 
-    private static final String ERROR_NUM = "Number out of range. Max order of magnitude = 10^5";
+    static final int MAX_VALUE = 1000000;
+
+    static final String MAX_VALUE_ERROR = "Number out of range. Max order of magnitude = " + MAX_VALUE;
 
     private static final String AND = "i";
+
     private static final String PLURAL = "s";
+
     private static final String DASH = "-";
+
     private static final String SPACE = " ";
+
+    private static final String EMPTY = "";
+
     private static final String DEC_SEPARATOR = "amb";
+
     private static final String DEC_CURRENCY = "cèntims";
 
-    private static final String N_0 = "zero";
-    private static final String N_1 = "un";
-    private static final String N_2 = "dos";
-    private static final String N_3 = "tres";
-    private static final String N_4 = "quatre";
-    private static final String N_5 = "cinc";
-    private static final String N_6 = "sis";
-    private static final String N_7 = "set";
-    private static final String N_8 = "vuit";
-    private static final String N_9 = "nou";
-
-    private static final String N_10 = "deu";
-    private static final String N_11 = "onze";
-    private static final String N_12 = "dotze";
-    private static final String N_13 = "tretze";
-    private static final String N_14 = "catorze";
-    private static final String N_15 = "quinze";
-    private static final String N_16 = "setze";
-    private static final String N_17 = "disset";
-    private static final String N_18 = "divuit";
-    private static final String N_19 = "dinou";
-    private static final String N_20 = "vint";
-    private static final String N_30 = "trenta";
-    private static final String N_40 = "quaranta";
-    private static final String N_50 = "cinquanta";
-    private static final String N_60 = "seixanta";
-    private static final String N_70 = "setanta";
-    private static final String N_80 = "vuitanta";
-    private static final String N_90 = "noranta";
-
-    private static final String N_100 = "cent";
-    private static final String N_1000 = "mil";
-
     private static String NUM_LETTER;
+
     private static String NUM_LETTER_DM;
+
     private static String NUM_LETTER_CM;
 
     private static boolean THOUSAND_FLAG;
 
     /**
-     * Converts number to text (Catalan language). Please note that decimals are optional and rounded up to 10^-2
+     * Converts number to text (Catalan language). Please note that decimals are optional and max precision is set up to 10^-2
      *
      * @param number (total amount, decimals are optional and are rounded up to 10^-2)
      * @param currency (applies to integers, decimals are always cents. Can be empty)
@@ -69,7 +51,7 @@ public class NumberToText {
 
         boolean hasCurrency = currency != null && !StringUtils.isEmpty(currency);
 
-        String result = centMilers((int) number);
+        String result = hundredsOfThousands((int) number);
 
         if (hasCurrency) {
             result += (SPACE + currency);
@@ -84,259 +66,261 @@ public class NumberToText {
         return result;
     }
 
-    private static String unitat(final int number) {
+    private static String units(final int number) {
 
-        switch (number) {
+        Number unit = getNumber(number, 1, 9);
+        if (unit != null)
+            return unit.literal;
 
-            case 9:
-                return N_9;
-            case 8:
-                return N_8;
-            case 7:
-                return N_7;
-            case 6:
-                return N_6;
-            case 5:
-                return N_5;
-            case 4:
-                return N_4;
-            case 3:
-                return N_3;
-            case 2:
-                return N_2;
-            case 1:
-                return N_1;
-
-            default:
-
-                if (THOUSAND_FLAG)
-                    return "";
-
-                return N_0;
-        }
+        return THOUSAND_FLAG ? EMPTY : N_0.literal;
     }
 
     private static String getBetweenTenAndTwenty(final int number) {
 
-        switch (number) {
-
-            case 10:
-                return N_10;
-            case 11:
-                return N_11;
-            case 12:
-                return N_12;
-            case 13:
-                return N_13;
-            case 14:
-                return N_14;
-            case 15:
-                return N_15;
-            case 16:
-                return N_16;
-            case 17:
-                return N_17;
-            case 18:
-                return N_18;
-            case 19:
-                return N_19;
-        }
-
-        return null;
+        Number unit = getNumber(number, 10, 19);
+        return unit == null ? null : unit.literal;
     }
 
-    private static String desena(final int number) {
+    private static String tens(final int number) {
 
-        if (number >= 90 && number <= 99) {
-            NUM_LETTER = N_90;
-            if (number > 90)
-                NUM_LETTER = NUM_LETTER.concat(DASH).concat(unitat(number - 90));
+        if (number < N_10.number)
+            NUM_LETTER = units(number);
 
-        } else if (number >= 80 && number <= 89) {
-            NUM_LETTER = N_80;
-            if (number > 80)
-                NUM_LETTER = NUM_LETTER.concat(DASH).concat(unitat(number - 80));
-
-        } else if (number >= 70 && number <= 79) {
-            NUM_LETTER = N_70;
-            if (number > 70)
-                NUM_LETTER = NUM_LETTER.concat(DASH).concat(unitat(number - 70));
-
-        } else if (number >= 60 && number <= 69) {
-            NUM_LETTER = N_60;
-            if (number > 60)
-                NUM_LETTER = NUM_LETTER.concat(DASH).concat(unitat(number - 60));
-
-        } else if (number >= 50 && number <= 59) {
-            NUM_LETTER = N_50;
-            if (number > 50)
-                NUM_LETTER = NUM_LETTER.concat(DASH).concat(unitat(number - 50));
-
-        } else if (number >= 40 && number <= 49) {
-            NUM_LETTER = N_40;
-            if (number > 40)
-                NUM_LETTER = NUM_LETTER.concat(DASH).concat(unitat(number - 40));
-
-        } else if (number >= 30 && number <= 39) {
-            NUM_LETTER = N_30;
-            if (number > 30)
-                NUM_LETTER = NUM_LETTER.concat(DASH).concat(unitat(number - 30));
-
-        } else if (number >= 20 && number <= 29) {
-            if (number == 20)
-                NUM_LETTER = N_20;
-            else
-                NUM_LETTER = (N_20 + DASH + AND + DASH).concat(unitat(number - 20));
-
-        } else if (number >= 10 && number <= 19) {
-
-            NUM_LETTER = getBetweenTenAndTwenty(number);
-
-        } else {
-            NUM_LETTER = unitat(number);
-        }
+        checkTens(N_90, number);
+        checkTens(N_80, number);
+        checkTens(N_70, number);
+        checkTens(N_60, number);
+        checkTens(N_50, number);
+        checkTens(N_40, number);
+        checkTens(N_30, number);
+        checkTens(N_20, number);
+        checkTens(N_10, number);
 
         return NUM_LETTER;
     }
 
-    private static String centenars(final int number) {
+    private static void checkTens(final Number current, final int number) {
 
-        if (number >= 100) {
+        if (number >= current.number && number < current.number + N_10.number) {
 
-            if (number >= 900 && number <= 999) {
-
-                NUM_LETTER = (N_9 + DASH + N_100 + PLURAL);
-                if (number > 900)
-                    NUM_LETTER += (SPACE).concat(desena(number - 900));
-
-            } else if (number >= 800 && number <= 899) {
-
-                NUM_LETTER = (N_8 + DASH + N_100 + PLURAL);
-                if (number > 800)
-                    NUM_LETTER += (SPACE).concat(desena(number - 800));
-
-            } else if (number >= 700 && number <= 799) {
-
-                NUM_LETTER = (N_7 + DASH + N_100 + PLURAL);
-                if (number > 700)
-                    NUM_LETTER += (SPACE).concat(desena(number - 700));
-
-            } else if (number >= 600 && number <= 699) {
-
-                NUM_LETTER = (N_6 + DASH + N_100 + PLURAL);
-                if (number > 600)
-                    NUM_LETTER += (SPACE).concat(desena(number - 600));
-
-            } else if (number >= 500 && number <= 599) {
-
-                NUM_LETTER = (N_5 + DASH + N_100 + PLURAL);
-                if (number > 500)
-                    NUM_LETTER += (SPACE).concat(desena(number - 500));
-
-            } else if (number >= 400 && number <= 499) {
-
-                NUM_LETTER = (N_4 + DASH + N_100 + PLURAL);
-                if (number > 400)
-                    NUM_LETTER += (SPACE).concat(desena(number - 400));
-
-            } else if (number >= 300 && number <= 399) {
-
-                NUM_LETTER = (N_3 + DASH + N_100 + PLURAL);
-                if (number > 300)
-                    NUM_LETTER += (SPACE).concat(desena(number - 300));
-
-            } else if (number >= 200 && number <= 299) {
-
-                NUM_LETTER = (N_2 + DASH + N_100 + PLURAL);
-                if (number > 200)
-                    NUM_LETTER += (SPACE).concat(desena(number - 200));
-
-            } else if (number >= 100 && number <= 199) {
-
-                if (number == 100)
-                    NUM_LETTER = N_100;
-                else
-                    NUM_LETTER = N_100.concat(SPACE).concat(desena(number - 100));
+            if (current == N_10) {
+                NUM_LETTER = getBetweenTenAndTwenty(number);
+                return;
             }
-        } else {
-            NUM_LETTER = desena(number);
+
+            NUM_LETTER = current.literal;
+            if (number > current.number) {
+
+                if (current == N_20)
+                    NUM_LETTER = (current.literal + DASH + AND + DASH).concat(units(number - current.number));
+                else
+                    NUM_LETTER = NUM_LETTER.concat(DASH).concat(units(number - current.number));
+            }
+
         }
+    }
+
+    private static String hundreds(final int number) {
+
+        if (number < 100)
+            NUM_LETTER = tens(number);
+
+        checkHundreds(N_9, number);
+        checkHundreds(N_8, number);
+        checkHundreds(N_7, number);
+        checkHundreds(N_6, number);
+        checkHundreds(N_5, number);
+        checkHundreds(N_4, number);
+        checkHundreds(N_3, number);
+        checkHundreds(N_2, number);
+        checkHundreds(N_1, number);
 
         return NUM_LETTER;
     }
 
-    private static String milers(final int number) {
+    private static void checkHundreds(final Number current, final int number) {
 
-        if (number == 1000)
-            return N_1000;
+        int currentHundred = current.number * N_100.number;
 
-        if (number % 1000 == 0 && number < 10000)
-            return unitat(number / 1000).concat(SPACE + N_1000);
+        if (number >= currentHundred && number < currentHundred + N_100.number) {
 
-        if (number >= 1000 && number < 2000)
-            return (N_1000 + SPACE).concat(centenars(number % 1000));
+            if (current == N_1) {
 
-        if (number >= 2000 && number < 10000)
-            return unitat(number / 1000).concat(SPACE).concat(N_1000 + SPACE).concat(centenars(number % 1000));
+                if (number == N_100.number)
+                    NUM_LETTER = N_100.literal;
+                else
+                    NUM_LETTER = N_100.literal.concat(SPACE).concat(tens(number - 100));
 
-        if (number < 1000)
-            return centenars(number);
+                return;
+            }
 
-        return "";
+            NUM_LETTER = (current.literal + DASH + N_100.literal + PLURAL);
+            if (number > currentHundred)
+                NUM_LETTER += (SPACE).concat(tens(number - currentHundred));
+        }
     }
 
-    private static String decMilers(final int number) {
+    private static String thousands(final int number) {
+
+        if (number == N_1000.number)
+            return N_1000.literal;
+
+        if (number % N_1000.number == 0 && number < tenPow(4))
+            return units(number / N_1000.number).concat(SPACE + N_1000.literal);
+
+        if (number >= N_1000.number && number < 2 * N_1000.number)
+            return (N_1000.literal + SPACE).concat(hundreds(number % N_1000.number));
+
+        if (number >= 2 * N_1000.number && number < tenPow(4))
+            return units(number / N_1000.number).concat(SPACE).concat(N_1000.literal + SPACE).concat(hundreds(number % N_1000.number));
+
+        if (number < N_1000.number)
+            return hundreds(number);
+
+        return EMPTY;
+    }
+
+    private static String tensOfThousands(final int number) {
 
         if (number == 0)
-            NUM_LETTER_DM = desena(number / 1000);
+            NUM_LETTER_DM = tens(number / N_1000.number);
 
-        else if (number % 10000 == 0)
-            NUM_LETTER_DM = desena(number / 1000).concat(SPACE + N_1000);
+        else if (number % tenPow(4) == 0)
+            NUM_LETTER_DM = tens(number / N_1000.number).concat(SPACE + N_1000.literal);
 
-        else if (number > 10000 && number < 100000)
-            NUM_LETTER_DM = desena(number / 1000).concat(SPACE + N_1000 + (StringUtils.isEmpty(centenars(number % 1000)) ? "" : SPACE))
-                .concat(centenars(number % 1000));
+        else if (number > tenPow(4) && number < tenPow(5))
+            NUM_LETTER_DM = tens(number / N_1000.number)
+                .concat(SPACE + N_1000.literal + (StringUtils.isEmpty(hundreds(number % N_1000.number)) ? EMPTY : SPACE))
+                .concat(hundreds(number % N_1000.number));
 
-        else if (number < 10000)
-            NUM_LETTER_DM = milers(number);
+        else if (number < tenPow(4))
+            NUM_LETTER_DM = thousands(number);
 
         return NUM_LETTER_DM;
     }
 
-    private static String centMilers(final int number) {
+    private static String hundredsOfThousands(final int number) {
 
-        if (number == 100000)
-            NUM_LETTER_CM = N_100 + SPACE + N_1000;
+        if (number == tenPow(5))
+            NUM_LETTER_CM = N_100.literal + SPACE + N_1000.literal;
 
-        else if (number >= 100000 && number < 1000000)
-            NUM_LETTER_CM = centenars(number / 1000).concat(SPACE + N_1000 + (StringUtils.isEmpty(centenars(number % 1000)) ? "" : SPACE))
-                .concat(centenars(number % 1000));
+        else if (number >= tenPow(5) && number < tenPow(6))
+            NUM_LETTER_CM = hundreds(number / N_1000.number)
+                .concat(SPACE + N_1000.literal + (StringUtils.isEmpty(hundreds(number % N_1000.number)) ? EMPTY : SPACE))
+                .concat(hundreds(number % N_1000.number));
 
-        else if (number < 100000)
-            NUM_LETTER_CM = decMilers(number);
-
+        else if (number < tenPow(5))
+            NUM_LETTER_CM = tensOfThousands(number);
 
         return NUM_LETTER_CM;
     }
 
     private static void checkMaxSize(final int number) {
 
-        if (number >= 1000000)
-            throw new RuntimeException(ERROR_NUM);
+        if (number >= MAX_VALUE)
+            throw new InvalidParameterException(MAX_VALUE_ERROR);
     }
 
     private static void checkThousandFlag(final int number) {
-        THOUSAND_FLAG = (number > 1000);
+        THOUSAND_FLAG = (number > N_1000.number);
     }
 
     private static String addDecimals(String number, final int decimals, final boolean hasCurrency) {
 
-        String num_decimals = desena(decimals);
+        String num_decimals = tens(decimals);
         number += (SPACE).concat(DEC_SEPARATOR).concat(SPACE).concat(num_decimals);
 
         if (hasCurrency)
             number += (SPACE + DEC_CURRENCY);
 
         return number;
+    }
+
+    private static double tenPow(final int value) {
+        return Math.pow(N_10.number, value);
+    }
+
+    protected enum Number {
+
+        N_0(0, "zero"),
+
+        N_1(1, "un"),
+
+        N_2(2, "dos"),
+
+        N_3(3, "tres"),
+
+        N_4(4, "quatre"),
+
+        N_5(5, "cinc"),
+
+        N_6(6, "sis"),
+
+        N_7(7, "set"),
+
+        N_8(8, "vuit"),
+
+        N_9(9, "nou"),
+
+        N_10(10, "deu"),
+
+        N_11(11, "onze"),
+
+        N_12(12, "dotze"),
+
+        N_13(13, "tretze"),
+
+        N_14(14, "catorze"),
+
+        N_15(15, "quinze"),
+
+        N_16(16, "setze"),
+
+        N_17(17, "disset"),
+
+        N_18(18, "divuit"),
+
+        N_19(19, "dinou"),
+
+        N_20(20, "vint"),
+
+        N_30(30, "trenta"),
+
+        N_40(40, "quaranta"),
+
+        N_50(50, "cinquanta"),
+
+        N_60(60, "seixanta"),
+
+        N_70(70, "setanta"),
+
+        N_80(80, "vuitanta"),
+
+        N_90(90, "noranta"),
+
+        N_100(100, "cent"),
+
+        N_1000(1000, "mil");
+
+        private int number;
+
+        private String literal;
+
+        Number(final int number, final String literal) {
+
+            this.number = number;
+            this.literal = literal;
+        }
+
+        public static Number getNumber(final int value, final int minValue, final int maxValue) {
+
+            for (Number number : Number.values()) {
+
+                if (value == number.number && number.number >= minValue && number.number <= maxValue)
+                    return number;
+            }
+
+            return null;
+        }
     }
 }
