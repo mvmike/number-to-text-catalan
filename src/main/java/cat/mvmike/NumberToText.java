@@ -2,11 +2,9 @@
 // See LICENSE for licensing information
 package cat.mvmike;
 
-import static cat.mvmike.NumberToText.Number.*;
-
 import java.security.InvalidParameterException;
 
-import org.apache.commons.lang3.StringUtils;
+import static cat.mvmike.Number.*;
 
 public class NumberToText {
 
@@ -39,7 +37,7 @@ public class NumberToText {
     /**
      * Converts number to text (Catalan language). Please note that decimals are optional and max precision is set up to 10^-2
      *
-     * @param number (total amount, decimals are optional and are rounded up to 10^-2)
+     * @param number   (total amount, decimals are optional and are rounded up to 10^-2)
      * @param currency (applies to integers, decimals are always cents. Can be empty)
      * @return string associated value
      */
@@ -49,7 +47,7 @@ public class NumberToText {
         checkThousandFlag((int) number);
         int decimals = (int) (Math.round(number % 1 * 100.0));
 
-        boolean hasCurrency = currency != null && !StringUtils.isEmpty(currency);
+        boolean hasCurrency = currency != null && !isEmptyString(currency);
 
         String result = hundredsOfThousands((int) number);
 
@@ -70,20 +68,20 @@ public class NumberToText {
 
         Number unit = getNumber(number, 1, 9);
         if (unit != null)
-            return unit.literal;
+            return unit.getLiteral();
 
-        return THOUSAND_FLAG ? EMPTY : N_0.literal;
+        return THOUSAND_FLAG ? EMPTY : N_0.getLiteral();
     }
 
     private static String getBetweenTenAndTwenty(final int number) {
 
         Number unit = getNumber(number, 10, 19);
-        return unit == null ? null : unit.literal;
+        return unit == null ? null : unit.getLiteral();
     }
 
     private static String tens(final int number) {
 
-        if (number < N_10.number)
+        if (number < N_10.getNumber())
             NUM_LETTER = units(number);
 
         checkTens(N_90, number);
@@ -101,20 +99,20 @@ public class NumberToText {
 
     private static void checkTens(final Number current, final int number) {
 
-        if (number >= current.number && number < current.number + N_10.number) {
+        if (number >= current.getNumber() && number < current.getNumber() + N_10.getNumber()) {
 
             if (current == N_10) {
                 NUM_LETTER = getBetweenTenAndTwenty(number);
                 return;
             }
 
-            NUM_LETTER = current.literal;
-            if (number > current.number) {
+            NUM_LETTER = current.getLiteral();
+            if (number > current.getNumber()) {
 
                 if (current == N_20)
-                    NUM_LETTER = (current.literal + DASH + AND + DASH).concat(units(number - current.number));
+                    NUM_LETTER = (current.getLiteral() + DASH + AND + DASH).concat(units(number - current.getNumber()));
                 else
-                    NUM_LETTER = NUM_LETTER.concat(DASH).concat(units(number - current.number));
+                    NUM_LETTER = NUM_LETTER.concat(DASH).concat(units(number - current.getNumber()));
             }
 
         }
@@ -140,21 +138,21 @@ public class NumberToText {
 
     private static void checkHundreds(final Number current, final int number) {
 
-        int currentHundred = current.number * N_100.number;
+        int currentHundred = current.getNumber() * N_100.getNumber();
 
-        if (number >= currentHundred && number < currentHundred + N_100.number) {
+        if (number >= currentHundred && number < currentHundred + N_100.getNumber()) {
 
             if (current == N_1) {
 
-                if (number == N_100.number)
-                    NUM_LETTER = N_100.literal;
+                if (number == N_100.getNumber())
+                    NUM_LETTER = N_100.getLiteral();
                 else
-                    NUM_LETTER = N_100.literal.concat(SPACE).concat(tens(number - 100));
+                    NUM_LETTER = N_100.getLiteral().concat(SPACE).concat(tens(number - 100));
 
                 return;
             }
 
-            NUM_LETTER = (current.literal + DASH + N_100.literal + PLURAL);
+            NUM_LETTER = (current.getLiteral() + DASH + N_100.getLiteral() + PLURAL);
             if (number > currentHundred)
                 NUM_LETTER += (SPACE).concat(tens(number - currentHundred));
         }
@@ -162,19 +160,19 @@ public class NumberToText {
 
     private static String thousands(final int number) {
 
-        if (number == N_1000.number)
-            return N_1000.literal;
+        if (number == N_1000.getNumber())
+            return N_1000.getLiteral();
 
-        if (number % N_1000.number == 0 && number < tenPow(4))
-            return units(number / N_1000.number).concat(SPACE + N_1000.literal);
+        if (number % N_1000.getNumber() == 0 && number < tenPow(4))
+            return units(number / N_1000.getNumber()).concat(SPACE + N_1000.getLiteral());
 
-        if (number >= N_1000.number && number < 2 * N_1000.number)
-            return (N_1000.literal + SPACE).concat(hundreds(number % N_1000.number));
+        if (number >= N_1000.getNumber() && number < 2 * N_1000.getNumber())
+            return (N_1000.getLiteral() + SPACE).concat(hundreds(number % N_1000.getNumber()));
 
-        if (number >= 2 * N_1000.number && number < tenPow(4))
-            return units(number / N_1000.number).concat(SPACE).concat(N_1000.literal + SPACE).concat(hundreds(number % N_1000.number));
+        if (number >= 2 * N_1000.getNumber() && number < tenPow(4))
+            return units(number / N_1000.getNumber()).concat(SPACE).concat(N_1000.getLiteral() + SPACE).concat(hundreds(number % N_1000.getNumber()));
 
-        if (number < N_1000.number)
+        if (number < N_1000.getNumber())
             return hundreds(number);
 
         return EMPTY;
@@ -183,15 +181,15 @@ public class NumberToText {
     private static String tensOfThousands(final int number) {
 
         if (number == 0)
-            NUM_LETTER_DM = tens(number / N_1000.number);
+            NUM_LETTER_DM = tens(number / N_1000.getNumber());
 
         else if (number % tenPow(4) == 0)
-            NUM_LETTER_DM = tens(number / N_1000.number).concat(SPACE + N_1000.literal);
+            NUM_LETTER_DM = tens(number / N_1000.getNumber()).concat(SPACE + N_1000.getLiteral());
 
         else if (number > tenPow(4) && number < tenPow(5))
-            NUM_LETTER_DM = tens(number / N_1000.number)
-                .concat(SPACE + N_1000.literal + (StringUtils.isEmpty(hundreds(number % N_1000.number)) ? EMPTY : SPACE))
-                .concat(hundreds(number % N_1000.number));
+            NUM_LETTER_DM = tens(number / N_1000.getNumber())
+                    .concat(SPACE + N_1000.getLiteral() + (isEmptyString(hundreds(number % N_1000.getNumber())) ? EMPTY : SPACE))
+                    .concat(hundreds(number % N_1000.getNumber()));
 
         else if (number < tenPow(4))
             NUM_LETTER_DM = thousands(number);
@@ -202,12 +200,12 @@ public class NumberToText {
     private static String hundredsOfThousands(final int number) {
 
         if (number == tenPow(5))
-            NUM_LETTER_CM = N_100.literal + SPACE + N_1000.literal;
+            NUM_LETTER_CM = N_100.getLiteral() + SPACE + N_1000.getLiteral();
 
         else if (number >= tenPow(5) && number < tenPow(6))
-            NUM_LETTER_CM = hundreds(number / N_1000.number)
-                .concat(SPACE + N_1000.literal + (StringUtils.isEmpty(hundreds(number % N_1000.number)) ? EMPTY : SPACE))
-                .concat(hundreds(number % N_1000.number));
+            NUM_LETTER_CM = hundreds(number / N_1000.getNumber())
+                    .concat(SPACE + N_1000.getLiteral() + (isEmptyString(hundreds(number % N_1000.getNumber())) ? EMPTY : SPACE))
+                    .concat(hundreds(number % N_1000.getNumber()));
 
         else if (number < tenPow(5))
             NUM_LETTER_CM = tensOfThousands(number);
@@ -222,7 +220,7 @@ public class NumberToText {
     }
 
     private static void checkThousandFlag(final int number) {
-        THOUSAND_FLAG = (number > N_1000.number);
+        THOUSAND_FLAG = (number > N_1000.getNumber());
     }
 
     private static String addDecimals(String number, final int decimals, final boolean hasCurrency) {
@@ -237,90 +235,10 @@ public class NumberToText {
     }
 
     private static double tenPow(final int value) {
-        return Math.pow(N_10.number, value);
+        return Math.pow(N_10.getNumber(), value);
     }
 
-    protected enum Number {
-
-        N_0(0, "zero"),
-
-        N_1(1, "un"),
-
-        N_2(2, "dos"),
-
-        N_3(3, "tres"),
-
-        N_4(4, "quatre"),
-
-        N_5(5, "cinc"),
-
-        N_6(6, "sis"),
-
-        N_7(7, "set"),
-
-        N_8(8, "vuit"),
-
-        N_9(9, "nou"),
-
-        N_10(10, "deu"),
-
-        N_11(11, "onze"),
-
-        N_12(12, "dotze"),
-
-        N_13(13, "tretze"),
-
-        N_14(14, "catorze"),
-
-        N_15(15, "quinze"),
-
-        N_16(16, "setze"),
-
-        N_17(17, "disset"),
-
-        N_18(18, "divuit"),
-
-        N_19(19, "dinou"),
-
-        N_20(20, "vint"),
-
-        N_30(30, "trenta"),
-
-        N_40(40, "quaranta"),
-
-        N_50(50, "cinquanta"),
-
-        N_60(60, "seixanta"),
-
-        N_70(70, "setanta"),
-
-        N_80(80, "vuitanta"),
-
-        N_90(90, "noranta"),
-
-        N_100(100, "cent"),
-
-        N_1000(1000, "mil");
-
-        private int number;
-
-        private String literal;
-
-        Number(final int number, final String literal) {
-
-            this.number = number;
-            this.literal = literal;
-        }
-
-        public static Number getNumber(final int value, final int minValue, final int maxValue) {
-
-            for (Number number : Number.values()) {
-
-                if (value == number.number && number.number >= minValue && number.number <= maxValue)
-                    return number;
-            }
-
-            return null;
-        }
+    private static boolean isEmptyString(final String str) {
+        return str == null || "".equals(str);
     }
 }

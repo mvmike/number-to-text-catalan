@@ -2,15 +2,14 @@
 // See LICENSE for licensing information
 package cat.mvmike;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import static cat.mvmike.NumberToText.MAX_VALUE;
-import static cat.mvmike.NumberToText.MAX_VALUE_ERROR;
+import org.junit.Test;
 
 import java.security.InvalidParameterException;
 
-import org.junit.Test;
+import static cat.mvmike.NumberToText.MAX_VALUE;
+import static cat.mvmike.NumberToText.MAX_VALUE_ERROR;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class NumberToTextTest {
 
