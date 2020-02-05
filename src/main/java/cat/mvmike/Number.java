@@ -1,5 +1,8 @@
 package cat.mvmike;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 enum Number {
 
     N_0(0, "zero"),
@@ -72,15 +75,13 @@ enum Number {
         this.literal = literal;
     }
 
-    public static Number getNumber(final int value, final int minValue, final int maxValue) {
+    public static Optional<Number> getNumber(final int value, final int minValue, final int maxValue) {
 
-        for (Number number : Number.values()) {
-
-            if (value == number.number && number.number >= minValue && number.number <= maxValue)
-                return number;
-        }
-
-        return null;
+        return Arrays.stream(Number.values())
+                .filter(number -> value == number.number)
+                .filter(number -> minValue <= number.number)
+                .filter(number -> maxValue >= number.number)
+                .findAny();
     }
 
     public int getNumber() {

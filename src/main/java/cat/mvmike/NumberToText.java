@@ -65,18 +65,15 @@ public class NumberToText {
     }
 
     private static String units(final int number) {
-
-        Number unit = getNumber(number, 1, 9);
-        if (unit != null)
-            return unit.getLiteral();
-
-        return THOUSAND_FLAG ? EMPTY : N_0.getLiteral();
+        return getNumber(number, 1, 9)
+                .map(Number::getLiteral)
+                .orElse(THOUSAND_FLAG ? EMPTY : N_0.getLiteral());
     }
 
     private static String getBetweenTenAndTwenty(final int number) {
-
-        Number unit = getNumber(number, 10, 19);
-        return unit == null ? null : unit.getLiteral();
+        return getNumber(number, 10, 19)
+                .map(Number::getLiteral)
+                .orElse(null);
     }
 
     private static String tens(final int number) {
