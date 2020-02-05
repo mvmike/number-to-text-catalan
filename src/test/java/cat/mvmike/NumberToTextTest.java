@@ -11,11 +11,26 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import static cat.mvmike.NumberToText.MAX_VALUE;
+import static cat.mvmike.NumberToText.MIN_VALUE;
+import static cat.mvmike.NumberToText.MIN_VALUE_ERROR;
 import static cat.mvmike.NumberToText.MAX_VALUE_ERROR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class NumberToTextTest {
+
+    @Test
+    public void getShouldCheckMinValue() {
+
+        NumberToText.get(MIN_VALUE, null);
+
+        try {
+            NumberToText.get(MIN_VALUE - 1, null);
+            fail("should have exploded because of invalid value");
+        } catch (InvalidParameterException ipe) {
+            assertEquals(MIN_VALUE_ERROR, ipe.getMessage());
+        }
+    }
 
     @Test
     public void getShouldCheckMaxValue() {
@@ -24,7 +39,7 @@ public class NumberToTextTest {
 
         try {
             NumberToText.get(MAX_VALUE, "");
-            fail("should have exploded because of invalid length");
+            fail("should have exploded because of invalid value");
         } catch (InvalidParameterException ipe) {
             assertEquals(MAX_VALUE_ERROR, ipe.getMessage());
         }
@@ -47,7 +62,7 @@ public class NumberToTextTest {
                 Arguments.of("set-cents cinquanta-cinc amb tretze", 755.13, ""),
                 Arguments.of("mil cent quinze euros amb seixanta-un cèntims", 1115.61, "euro"),
                 Arguments.of("mil set-cents catorze euros", 1714, "euro"),
-                Arguments.of("cinquanta-cinc mil vuit-cents noranta-un amb setanta-sis", 55891.75513, ""),
+                Arguments.of("cinquanta-cinc mil vuit-cents noranta-un amb setanta-sis", 55891.75513, null),
                 Arguments.of("set-cents un mil seixanta euros amb deu cèntims", 701060.1, "euro")
         );
     }

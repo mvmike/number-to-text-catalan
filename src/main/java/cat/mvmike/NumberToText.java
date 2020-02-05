@@ -8,9 +8,13 @@ import static cat.mvmike.Number.*;
 
 public class NumberToText {
 
+    static final int MIN_VALUE = 0;
+
     static final int MAX_VALUE = 1000000;
 
-    static final String MAX_VALUE_ERROR = "Number out of range. Max order of magnitude = " + MAX_VALUE;
+    static final String MIN_VALUE_ERROR = "Number out of range. Min value = " + MIN_VALUE;
+
+    static final String MAX_VALUE_ERROR = "Number out of range. Max value = " + MAX_VALUE;
 
     private static final String AND = "i";
 
@@ -43,6 +47,7 @@ public class NumberToText {
      */
     public static String get(final double number, final String currency) {
 
+        checkMinSize((int) number);
         checkMaxSize((int) number);
         checkThousandFlag((int) number);
         int decimals = (int) (Math.round(number % 1 * 100.0));
@@ -208,6 +213,12 @@ public class NumberToText {
             NUM_LETTER_CM = tensOfThousands(number);
 
         return NUM_LETTER_CM;
+    }
+
+    private static void checkMinSize(final int number) {
+
+        if (number < MIN_VALUE)
+            throw new InvalidParameterException(MIN_VALUE_ERROR);
     }
 
     private static void checkMaxSize(final int number) {
