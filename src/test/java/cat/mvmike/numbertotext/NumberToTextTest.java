@@ -1,6 +1,6 @@
 // Copyright (c) 2016, Miquel Martí <miquelmarti111@gmail.com>
 // See LICENSE for licensing information
-package cat.mvmike;
+package cat.mvmike.numbertotext;
 
 import java.util.stream.Stream;
 import org.junit.Test;
@@ -10,10 +10,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import static cat.mvmike.NumberToText.MAX_VALUE;
-import static cat.mvmike.NumberToText.MIN_VALUE;
-import static cat.mvmike.NumberToText.MIN_VALUE_ERROR;
-import static cat.mvmike.NumberToText.MAX_VALUE_ERROR;
+import static cat.mvmike.numbertotext.NumberToText.MAX_VALUE;
+import static cat.mvmike.numbertotext.NumberToText.MIN_VALUE;
+import static cat.mvmike.numbertotext.NumberToText.MIN_VALUE_ERROR;
+import static cat.mvmike.numbertotext.NumberToText.MAX_VALUE_ERROR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 

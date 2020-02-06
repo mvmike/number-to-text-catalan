@@ -17,12 +17,21 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <apache.commons.version>3.9</apache.commons.version>
+
         <junit.version>4.13</junit.version>
         <junit.jupiter.params.version>5.6.0</junit.jupiter.params.version>
 
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

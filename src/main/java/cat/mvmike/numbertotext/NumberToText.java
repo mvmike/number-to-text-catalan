@@ -1,10 +1,12 @@
 // Copyright (c) 2016, Miquel Martí <miquelmarti111@gmail.com>
 // See LICENSE for licensing information
-package cat.mvmike;
+package cat.mvmike.numbertotext;
 
+import cat.mvmike.numbertotext.language.Literal;
 import java.security.InvalidParameterException;
 
-import static cat.mvmike.Number.*;
+import static cat.mvmike.numbertotext.language.Literal.*;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class NumberToText {
 
@@ -12,23 +14,9 @@ public class NumberToText {
 
     static final int MAX_VALUE = 1000000;
 
-    static final String MIN_VALUE_ERROR = "Number out of range. Min value = " + MIN_VALUE;
+    static final String MIN_VALUE_ERROR = "Literal out of range. Min value = " + MIN_VALUE;
 
-    static final String MAX_VALUE_ERROR = "Number out of range. Max value = " + MAX_VALUE;
-
-    private static final String AND = "i";
-
-    private static final String PLURAL = "s";
-
-    private static final String DASH = "-";
-
-    private static final String SPACE = " ";
-
-    private static final String EMPTY = "";
-
-    private static final String DEC_SEPARATOR = "amb";
-
-    private static final String DEC_CURRENCY = "cèntims";
+    static final String MAX_VALUE_ERROR = "Literal out of range. Max value = " + MAX_VALUE;
 
     private static String NUM_LETTER;
 
@@ -52,7 +40,7 @@ public class NumberToText {
         checkThousandFlag((int) number);
         int decimals = (int) (Math.round(number % 1 * 100.0));
 
-        boolean hasCurrency = currency != null && !isEmptyString(currency);
+        boolean hasCurrency = currency != null && !isEmpty(currency);
 
         String result = hundredsOfThousands((int) number);
 
@@ -70,14 +58,14 @@ public class NumberToText {
     }
 
     private static String units(final int number) {
-        return getNumber(number, 1, 9)
-                .map(Number::getLiteral)
+        return getLiteral(number, 1, 9)
+                .map(Literal::getLiteral)
                 .orElse(THOUSAND_FLAG ? EMPTY : N_0.getLiteral());
     }
 
     private static String getBetweenTenAndTwenty(final int number) {
-        return getNumber(number, 10, 19)
-                .map(Number::getLiteral)
+        return getLiteral(number, 10, 19)
+                .map(Literal::getLiteral)
                 .orElse(null);
     }
 
@@ -99,7 +87,7 @@ public class NumberToText {
         return NUM_LETTER;
     }
 
-    private static void checkTens(final Number current, final int number) {
+    private static void checkTens(final Literal current, final int number) {
 
         if (number >= current.getNumber() && number < current.getNumber() + N_10.getNumber()) {
 
@@ -138,7 +126,7 @@ public class NumberToText {
         return NUM_LETTER;
     }
 
-    private static void checkHundreds(final Number current, final int number) {
+    private static void checkHundreds(final Literal current, final int number) {
 
         int currentHundred = current.getNumber() * N_100.getNumber();
 
@@ -190,7 +178,7 @@ public class NumberToText {
 
         else if (number > tenPow(4) && number < tenPow(5))
             NUM_LETTER_DM = tens(number / N_1000.getNumber())
-                    .concat(SPACE + N_1000.getLiteral() + (isEmptyString(hundreds(number % N_1000.getNumber())) ? EMPTY : SPACE))
+                    .concat(SPACE + N_1000.getLiteral() + (isEmpty(hundreds(number % N_1000.getNumber())) ? EMPTY : SPACE))
                     .concat(hundreds(number % N_1000.getNumber()));
 
         else if (number < tenPow(4))
@@ -206,7 +194,7 @@ public class NumberToText {
 
         else if (number >= tenPow(5) && number < tenPow(6))
             NUM_LETTER_CM = hundreds(number / N_1000.getNumber())
-                    .concat(SPACE + N_1000.getLiteral() + (isEmptyString(hundreds(number % N_1000.getNumber())) ? EMPTY : SPACE))
+                    .concat(SPACE + N_1000.getLiteral() + (isEmpty(hundreds(number % N_1000.getNumber())) ? EMPTY : SPACE))
                     .concat(hundreds(number % N_1000.getNumber()));
 
         else if (number < tenPow(5))
@@ -244,9 +232,5 @@ public class NumberToText {
 
     private static double tenPow(final int value) {
         return Math.pow(N_10.getNumber(), value);
-    }
-
-    private static boolean isEmptyString(final String str) {
-        return str == null || "".equals(str);
     }
 }

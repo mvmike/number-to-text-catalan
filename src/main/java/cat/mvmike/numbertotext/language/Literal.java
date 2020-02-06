@@ -1,9 +1,9 @@
-package cat.mvmike;
+package cat.mvmike.numbertotext.language;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-enum Number {
+public enum Literal {
 
     N_0(0, "zero"),
 
@@ -65,19 +65,33 @@ enum Number {
 
     N_1000(1000, "mil");
 
+    public static final String AND = "i";
+
+    public static final String PLURAL = "s";
+
+    public static final String DASH = "-";
+
+    public static final String SPACE = " ";
+
+    public static final String EMPTY = "";
+
+    public static final String DEC_SEPARATOR = "amb";
+
+    public static final String DEC_CURRENCY = "cèntims";
+
     private int number;
 
     private String literal;
 
-    Number(final int number, final String literal) {
+    Literal(final int number, final String literal) {
 
         this.number = number;
         this.literal = literal;
     }
 
-    public static Optional<Number> getNumber(final int value, final int minValue, final int maxValue) {
+    public static Optional<Literal> getLiteral(final int value, final int minValue, final int maxValue) {
 
-        return Arrays.stream(Number.values())
+        return Arrays.stream(Literal.values())
                 .filter(number -> value == number.number)
                 .filter(number -> minValue <= number.number)
                 .filter(number -> maxValue >= number.number)
