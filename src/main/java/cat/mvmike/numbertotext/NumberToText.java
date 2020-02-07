@@ -4,6 +4,7 @@ package cat.mvmike.numbertotext;
 
 import cat.mvmike.numbertotext.language.Literal;
 import java.security.InvalidParameterException;
+import java.util.Optional;
 
 import static cat.mvmike.numbertotext.language.Literal.*;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -12,22 +13,15 @@ public class NumberToText {
 
     static final int MIN_VALUE = 0;
 
-    static final int MAX_VALUE = 1000000;
+    static final int MAX_VALUE = 1_000_000;
 
     static final String MIN_VALUE_ERROR = "Literal out of range. Min value = " + MIN_VALUE;
 
     static final String MAX_VALUE_ERROR = "Literal out of range. Max value = " + MAX_VALUE;
 
-    private static String NUM_LETTER;
-
-    private static String NUM_LETTER_DM;
-
-    private static String NUM_LETTER_CM;
-
-    private static boolean THOUSAND_FLAG;
-
     /**
-     * Converts number to text (Catalan language). Please note that decimals are optional and max precision is set up to 10^-2
+     * Converts number to text (Catalan language). Please note that decimals are optional and max precision is set up
+     * to 10^-2
      *
      * @param number   (total amount, decimals are optional and are rounded up to 10^-2)
      * @param currency (applies to integers, decimals are always cents. Can be empty)
@@ -35,202 +29,93 @@ public class NumberToText {
      */
     public static String get(final double number, final String currency) {
 
-        checkMinSize((int) number);
-        checkMaxSize((int) number);
-        checkThousandFlag((int) number);
-        int decimals = (int) (Math.round(number % 1 * 100.0));
+        // initial validations
+        checkMinSize(number);
+        checkMaxSize(number);
 
-        boolean hasCurrency = currency != null && !isEmpty(currency);
+        int intPart = (int) number;
+        int decimalPart = (int) Math.round((number - intPart) * 100);
 
-        String result = hundredsOfThousands((int) number);
+        return getThousands(intPart)
+                + getUnits(intPart, intPart == 0)
+                + getCurrencyUnit(intPart, currency)
+                + getDecimals(decimalPart)
+                + getCurrencyCents(decimalPart, currency);
+    }
 
-        if (hasCurrency) {
-            result += (SPACE + currency);
+    private static String getThousands(final int number) {
+        int thousandPart = number / 1000;
 
-            if ((int) number != 1)
-                result += PLURAL;
+        if (thousandPart == N_0.getNumber())
+            return EMPTY;
+
+        if (thousandPart == N_1.getNumber())
+            return N_1000.getLiteral() + SPACE;
+
+        return getUnits(thousandPart, false) + SPACE + N_1000.getLiteral()
+                + (number % 1000 == 0 ? EMPTY : SPACE);
+    }
+
+    private static String getUnits(final int number, final boolean includeZero) {
+        String tens = (number % 100 == 0 && !includeZero ? EMPTY : getTens(number % 100));
+        String hundreds = getHundreds((number / 100) % 10);
+
+        return isEmpty(hundreds) ? tens :
+                isEmpty(tens) ? hundreds : hundreds + SPACE + tens;
+    }
+
+    private static String getHundreds(final int number) {
+
+        Optional<Literal> optLiteral = getLiteral(number, N_1, N_9);
+        if (optLiteral.isEmpty())
+            return EMPTY;
+
+        Literal literal = optLiteral.get();
+        return literal == N_1 ?
+                N_100.getLiteral() : literal.getLiteral() + DASH + N_100.getLiteral() + PLURAL;
+    }
+
+    private static String getTens(final int number) {
+
+        if (number <= N_20.getNumber())
+            return getLiteral(number, N_0, N_20).map(Literal::getLiteral).get();
+
+        if (number <= N_30.getNumber())
+            return N_20.getLiteral() + DASH + AND + DASH + getLiteral(number % 10, N_0, N_9).map(Literal::getLiteral).get();
+
+        for (Literal literal : new Literal[]{N_90, N_80, N_70, N_60, N_50, N_40, N_30}) {
+            if (number < literal.getNumber())
+                continue;
+            return literal.getLiteral() + (getLiteral(number % 10, N_1, N_9).map(l -> DASH + l.getLiteral()).orElse(EMPTY));
         }
-
-        if (decimals > 0)
-            result = addDecimals(result, decimals, hasCurrency);
-
-        return result;
-    }
-
-    private static String units(final int number) {
-        return getLiteral(number, 1, 9)
-                .map(Literal::getLiteral)
-                .orElse(THOUSAND_FLAG ? EMPTY : N_0.getLiteral());
-    }
-
-    private static String getBetweenTenAndTwenty(final int number) {
-        return getLiteral(number, 10, 19)
-                .map(Literal::getLiteral)
-                .orElse(null);
-    }
-
-    private static String tens(final int number) {
-
-        if (number < N_10.getNumber())
-            NUM_LETTER = units(number);
-
-        checkTens(N_90, number);
-        checkTens(N_80, number);
-        checkTens(N_70, number);
-        checkTens(N_60, number);
-        checkTens(N_50, number);
-        checkTens(N_40, number);
-        checkTens(N_30, number);
-        checkTens(N_20, number);
-        checkTens(N_10, number);
-
-        return NUM_LETTER;
-    }
-
-    private static void checkTens(final Literal current, final int number) {
-
-        if (number >= current.getNumber() && number < current.getNumber() + N_10.getNumber()) {
-
-            if (current == N_10) {
-                NUM_LETTER = getBetweenTenAndTwenty(number);
-                return;
-            }
-
-            NUM_LETTER = current.getLiteral();
-            if (number > current.getNumber()) {
-
-                if (current == N_20)
-                    NUM_LETTER = (current.getLiteral() + DASH + AND + DASH).concat(units(number - current.getNumber()));
-                else
-                    NUM_LETTER = NUM_LETTER.concat(DASH).concat(units(number - current.getNumber()));
-            }
-
-        }
-    }
-
-    private static String hundreds(final int number) {
-
-        if (number < 100)
-            NUM_LETTER = tens(number);
-
-        checkHundreds(N_9, number);
-        checkHundreds(N_8, number);
-        checkHundreds(N_7, number);
-        checkHundreds(N_6, number);
-        checkHundreds(N_5, number);
-        checkHundreds(N_4, number);
-        checkHundreds(N_3, number);
-        checkHundreds(N_2, number);
-        checkHundreds(N_1, number);
-
-        return NUM_LETTER;
-    }
-
-    private static void checkHundreds(final Literal current, final int number) {
-
-        int currentHundred = current.getNumber() * N_100.getNumber();
-
-        if (number >= currentHundred && number < currentHundred + N_100.getNumber()) {
-
-            if (current == N_1) {
-
-                if (number == N_100.getNumber())
-                    NUM_LETTER = N_100.getLiteral();
-                else
-                    NUM_LETTER = N_100.getLiteral().concat(SPACE).concat(tens(number - 100));
-
-                return;
-            }
-
-            NUM_LETTER = (current.getLiteral() + DASH + N_100.getLiteral() + PLURAL);
-            if (number > currentHundred)
-                NUM_LETTER += (SPACE).concat(tens(number - currentHundred));
-        }
-    }
-
-    private static String thousands(final int number) {
-
-        if (number == N_1000.getNumber())
-            return N_1000.getLiteral();
-
-        if (number % N_1000.getNumber() == 0 && number < tenPow(4))
-            return units(number / N_1000.getNumber()).concat(SPACE + N_1000.getLiteral());
-
-        if (number >= N_1000.getNumber() && number < 2 * N_1000.getNumber())
-            return (N_1000.getLiteral() + SPACE).concat(hundreds(number % N_1000.getNumber()));
-
-        if (number >= 2 * N_1000.getNumber() && number < tenPow(4))
-            return units(number / N_1000.getNumber()).concat(SPACE).concat(N_1000.getLiteral() + SPACE).concat(hundreds(number % N_1000.getNumber()));
-
-        if (number < N_1000.getNumber())
-            return hundreds(number);
 
         return EMPTY;
     }
 
-    private static String tensOfThousands(final int number) {
-
-        if (number == 0)
-            NUM_LETTER_DM = tens(number / N_1000.getNumber());
-
-        else if (number % tenPow(4) == 0)
-            NUM_LETTER_DM = tens(number / N_1000.getNumber()).concat(SPACE + N_1000.getLiteral());
-
-        else if (number > tenPow(4) && number < tenPow(5))
-            NUM_LETTER_DM = tens(number / N_1000.getNumber())
-                    .concat(SPACE + N_1000.getLiteral() + (isEmpty(hundreds(number % N_1000.getNumber())) ? EMPTY : SPACE))
-                    .concat(hundreds(number % N_1000.getNumber()));
-
-        else if (number < tenPow(4))
-            NUM_LETTER_DM = thousands(number);
-
-        return NUM_LETTER_DM;
+    private static String getCurrencyUnit(final int number, final String currency) {
+        return isEmpty(currency) ? EMPTY : SPACE + currency + (number % 10 != 1 ? PLURAL : EMPTY);
     }
 
-    private static String hundredsOfThousands(final int number) {
-
-        if (number == tenPow(5))
-            NUM_LETTER_CM = N_100.getLiteral() + SPACE + N_1000.getLiteral();
-
-        else if (number >= tenPow(5) && number < tenPow(6))
-            NUM_LETTER_CM = hundreds(number / N_1000.getNumber())
-                    .concat(SPACE + N_1000.getLiteral() + (isEmpty(hundreds(number % N_1000.getNumber())) ? EMPTY : SPACE))
-                    .concat(hundreds(number % N_1000.getNumber()));
-
-        else if (number < tenPow(5))
-            NUM_LETTER_CM = tensOfThousands(number);
-
-        return NUM_LETTER_CM;
+    private static String getDecimals(final int number) {
+        String decimalPart = getTens(number);
+        return isEmpty(decimalPart) || N_0.getLiteral().equals(decimalPart) ? EMPTY :
+                SPACE + DEC_SEPARATOR + SPACE + decimalPart;
     }
 
-    private static void checkMinSize(final int number) {
+    private static String getCurrencyCents(final int number, final String currency) {
+        if (number == 0 || isEmpty(currency))
+            return EMPTY;
 
+        return number == 1 ? SPACE + DEC_CURRENCY : SPACE + DEC_CURRENCY + PLURAL;
+    }
+
+    private static void checkMinSize(final double number) {
         if (number < MIN_VALUE)
             throw new InvalidParameterException(MIN_VALUE_ERROR);
     }
 
-    private static void checkMaxSize(final int number) {
-
+    private static void checkMaxSize(final double number) {
         if (number >= MAX_VALUE)
             throw new InvalidParameterException(MAX_VALUE_ERROR);
-    }
-
-    private static void checkThousandFlag(final int number) {
-        THOUSAND_FLAG = (number > N_1000.getNumber());
-    }
-
-    private static String addDecimals(String number, final int decimals, final boolean hasCurrency) {
-
-        String num_decimals = tens(decimals);
-        number += (SPACE).concat(DEC_SEPARATOR).concat(SPACE).concat(num_decimals);
-
-        if (hasCurrency)
-            number += (SPACE + DEC_CURRENCY);
-
-        return number;
-    }
-
-    private static double tenPow(final int value) {
-        return Math.pow(N_10.getNumber(), value);
     }
 }

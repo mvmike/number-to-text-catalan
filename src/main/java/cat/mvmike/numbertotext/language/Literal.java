@@ -77,7 +77,7 @@ public enum Literal {
 
     public static final String DEC_SEPARATOR = "amb";
 
-    public static final String DEC_CURRENCY = "cèntims";
+    public static final String DEC_CURRENCY = "cèntim";
 
     private int number;
 
@@ -89,13 +89,12 @@ public enum Literal {
         this.literal = literal;
     }
 
-    public static Optional<Literal> getLiteral(final int value, final int minValue, final int maxValue) {
-
+    public static Optional<Literal> getLiteral(final int value, final Literal minValue, final Literal maxValue) {
         return Arrays.stream(Literal.values())
                 .filter(number -> value == number.number)
-                .filter(number -> minValue <= number.number)
-                .filter(number -> maxValue >= number.number)
-                .findAny();
+                .filter(number -> minValue.number <= number.number)
+                .filter(number -> maxValue.number >= number.number)
+                .findFirst();
     }
 
     public int getNumber() {

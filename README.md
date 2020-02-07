@@ -1,6 +1,8 @@
 ## Catalan number to text helper
 
-Converts number to text (Catalan language), including currency if needed. Decimals are optional and rounded up to 10^-2.
+Converts number to text (Catalan language), including currency if needed.
+Decimals are optional and rounded up to 10^-2.
+Working range is [0, 1.000.000)
 
 Static class. Usage example:
 
