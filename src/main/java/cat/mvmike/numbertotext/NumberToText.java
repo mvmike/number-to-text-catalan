@@ -7,7 +7,6 @@ import java.security.InvalidParameterException;
 import java.util.Optional;
 
 import static cat.mvmike.numbertotext.language.Literal.*;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class NumberToText {
 
@@ -119,5 +118,9 @@ public class NumberToText {
     private static void checkMaxSize(final double number) {
         if (number >= MAX_VALUE)
             throw new InvalidParameterException(MAX_VALUE_ERROR);
+    }
+
+    private static boolean isEmpty(CharSequence cs) {
+        return cs == null || cs.length() == 0;
     }
 }
