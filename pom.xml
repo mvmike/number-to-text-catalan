@@ -19,7 +19,7 @@
 
         <apache.commons.version>3.9</apache.commons.version>
 
-        <junit.version>4.13</junit.version>
+        <junit.version>4.13.1</junit.version>
         <junit.jupiter.params.version>5.6.0</junit.jupiter.params.version>
 
     </properties>
