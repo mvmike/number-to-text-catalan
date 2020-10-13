@@ -78,10 +78,12 @@ public class NumberToText {
     private static String getTens(final int number) {
 
         if (number <= N_20.getNumber())
-            return getLiteral(number, N_0, N_20).map(Literal::getLiteral).get();
+            return getLiteral(number, N_0, N_20)
+                    .map(Literal::getLiteral)
+                    .orElseThrow();
 
         if (number <= N_30.getNumber())
-            return N_20.getLiteral() + DASH + AND + DASH + getLiteral(number % 10, N_0, N_9).map(Literal::getLiteral).get();
+            return N_20.getLiteral() + DASH + AND + DASH + getLiteral(number % 10, N_0, N_9).map(Literal::getLiteral).orElseThrow();
 
         for (Literal literal : new Literal[]{N_90, N_80, N_70, N_60, N_50, N_40, N_30}) {
             if (number < literal.getNumber())
