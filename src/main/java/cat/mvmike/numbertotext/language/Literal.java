@@ -3,6 +3,8 @@ package cat.mvmike.numbertotext.language;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static java.lang.String.format;
+
 public enum Literal {
 
     N_0(0, "zero"),
@@ -79,9 +81,9 @@ public enum Literal {
 
     public static final String DEC_CURRENCY = "cèntim";
 
-    private int number;
+    private final int number;
 
-    private String literal;
+    private final String literal;
 
     Literal(final int number, final String literal) {
 
@@ -89,12 +91,19 @@ public enum Literal {
         this.literal = literal;
     }
 
-    public static Optional<Literal> getLiteral(final int value, final Literal minValue, final Literal maxValue) {
+    public static Optional<Literal> getLiteralOpt(final int value, final Literal minValue, final Literal maxValue) {
         return Arrays.stream(Literal.values())
                 .filter(number -> value == number.number)
                 .filter(number -> minValue.number <= number.number)
                 .filter(number -> maxValue.number >= number.number)
                 .findFirst();
+    }
+
+    public static String getStringLiteral(final int value, final Literal minValue, final Literal maxValue) {
+        return getLiteralOpt(value, minValue, maxValue)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        format("No Literal found for value %s between %s and %s", value, minValue, maxValue)
+                )).getLiteral();
     }
 
     public int getNumber() {

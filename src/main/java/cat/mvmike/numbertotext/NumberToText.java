@@ -3,7 +3,9 @@
 package cat.mvmike.numbertotext;
 
 import cat.mvmike.numbertotext.language.Literal;
+
 import java.security.InvalidParameterException;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static cat.mvmike.numbertotext.language.Literal.*;
@@ -63,34 +65,25 @@ public class NumberToText {
                 isEmpty(tens) ? hundreds : hundreds + SPACE + tens;
     }
 
-    private static String getHundreds(final int number) {
-
-        Optional<Literal> optLiteral = getLiteral(number, N_1, N_9);
-        if (optLiteral.isEmpty())
-            return EMPTY;
-
-        Literal literal = optLiteral.get();
-        return literal == N_1 ?
-                N_100.getLiteral() : literal.getLiteral() + DASH + N_100.getLiteral() + PLURAL;
-    }
-
     private static String getTens(final int number) {
 
         if (number <= N_20.getNumber())
-            return getLiteral(number, N_0, N_20)
-                    .map(Literal::getLiteral)
-                    .orElseThrow();
+            return getStringLiteral(number, N_0, N_20);
 
         if (number <= N_30.getNumber())
-            return N_20.getLiteral() + DASH + AND + DASH + getLiteral(number % 10, N_0, N_9).map(Literal::getLiteral).orElseThrow();
+            return N_20.getLiteral() + DASH + AND + DASH + getStringLiteral(number % 10, N_0, N_9);
 
-        for (Literal literal : new Literal[]{N_90, N_80, N_70, N_60, N_50, N_40, N_30}) {
-            if (number < literal.getNumber())
-                continue;
-            return literal.getLiteral() + (getLiteral(number % 10, N_1, N_9).map(l -> DASH + l.getLiteral()).orElse(EMPTY));
-        }
+        return Arrays.stream(new Literal[]{N_90, N_80, N_70, N_60, N_50, N_40, N_30})
+                .filter(l -> number >= l.getNumber())
+                .findFirst()
+                .map(l -> l.getLiteral() + DASH + getStringLiteral(number % 10, N_1, N_9))
+                .orElse(EMPTY);
+    }
 
-        return EMPTY;
+    private static String getHundreds(final int number) {
+        return getLiteralOpt(number, N_1, N_9)
+                .map(l -> l == N_1 ? N_100.getLiteral() : l.getLiteral() + DASH + N_100.getLiteral() + PLURAL)
+                .orElse(EMPTY);
     }
 
     private static String getCurrencyUnit(final int number, final String currency) {
@@ -99,12 +92,12 @@ public class NumberToText {
 
     private static String getDecimals(final int number) {
         String decimalPart = getTens(number);
-        return isEmpty(decimalPart) || N_0.getLiteral().equals(decimalPart) ? EMPTY :
-                SPACE + DEC_SEPARATOR + SPACE + decimalPart;
+        return isEmpty(decimalPart) || N_0.getLiteral().equals(decimalPart) ?
+                EMPTY : SPACE + DEC_SEPARATOR + SPACE + decimalPart;
     }
 
     private static String getCurrencyCents(final int number, final String currency) {
-        if (number == 0 || isEmpty(currency))
+        if (number == N_0.getNumber() || isEmpty(currency))
             return EMPTY;
 
         return number == 1 ? SPACE + DEC_CURRENCY : SPACE + DEC_CURRENCY + PLURAL;
