@@ -91,12 +91,12 @@ public enum Literal {
         this.literal = literal;
     }
 
-    public static Optional<Literal> getLiteralOpt(final int value, final Literal minValue, final Literal maxValue) {
-        return Arrays.stream(Literal.values())
-                .filter(number -> value == number.number)
-                .filter(number -> minValue.number <= number.number)
-                .filter(number -> maxValue.number >= number.number)
-                .findFirst();
+    public int getNumber() {
+        return number;
+    }
+
+    public String getLiteral() {
+        return literal;
     }
 
     public static String getStringLiteral(final int value, final Literal minValue, final Literal maxValue) {
@@ -106,11 +106,11 @@ public enum Literal {
                 )).getLiteral();
     }
 
-    public int getNumber() {
-        return number;
-    }
-
-    public String getLiteral() {
-        return literal;
+    public static Optional<Literal> getLiteralOpt(final int value, final Literal minValue, final Literal maxValue) {
+        return Arrays.stream(Literal.values())
+                .filter(number -> value == number.number)
+                .filter(number -> minValue.number <= number.number)
+                .filter(number -> maxValue.number >= number.number)
+                .findFirst();
     }
 }

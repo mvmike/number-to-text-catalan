@@ -38,9 +38,9 @@ public class NumberToText {
 
         return getThousands(intPart)
                 + getUnits(intPart, intPart == 0)
-                + getCurrencyUnit(intPart, currency)
-                + getDecimals(decimalPart)
-                + getCurrencyCents(decimalPart, currency);
+                + getUnitsCurrency(intPart, currency)
+                + getCents(decimalPart)
+                + getCentsCurrency(decimalPart, currency);
     }
 
     private static String getThousands(final int number) {
@@ -85,17 +85,17 @@ public class NumberToText {
                 .orElse(EMPTY);
     }
 
-    private static String getCurrencyUnit(final int number, final String currency) {
+    private static String getUnitsCurrency(final int number, final String currency) {
         return isEmpty(currency) ? EMPTY : SPACE + currency + (number % 10 != 1 ? PLURAL : EMPTY);
     }
 
-    private static String getDecimals(final int number) {
+    private static String getCents(final int number) {
         String decimalPart = getTens(number);
         return isEmpty(decimalPart) || N_0.getLiteral().equals(decimalPart) ?
                 EMPTY : SPACE + DEC_SEPARATOR + SPACE + decimalPart;
     }
 
-    private static String getCurrencyCents(final int number, final String currency) {
+    private static String getCentsCurrency(final int number, final String currency) {
         if (number == N_0.getNumber() || isEmpty(currency))
             return EMPTY;
 
