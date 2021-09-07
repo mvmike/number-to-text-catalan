@@ -14,8 +14,8 @@ import static cat.mvmike.numbertotext.NumberToText.MAX_VALUE;
 import static cat.mvmike.numbertotext.NumberToText.MIN_VALUE;
 import static cat.mvmike.numbertotext.NumberToText.MIN_VALUE_ERROR;
 import static cat.mvmike.numbertotext.NumberToText.MAX_VALUE_ERROR;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class NumberToTextTest {
 
