@@ -6,7 +6,6 @@ import cat.mvmike.numbertotext.language.Literal;
 
 import java.security.InvalidParameterException;
 import java.util.Arrays;
-import java.util.Optional;
 
 import static cat.mvmike.numbertotext.language.Literal.*;
 
