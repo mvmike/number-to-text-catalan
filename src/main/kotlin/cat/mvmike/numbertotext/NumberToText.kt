@@ -18,17 +18,17 @@ object NumberToText {
      * Converts number to text (Catalan language). Please note that decimals are optional and max precision is set up
      * to 10^-2
      *
-     * @param number   (total amount, decimals are optional and are rounded up to 10^-2)
+     * @param amount   (total amount, decimals are optional and are rounded up to 10^-2)
      * @param currency (applies to integers, decimals are always cents. Can be empty)
      * @return string associated value
      */
-    fun get(number: Double, currency: String?): String {
+    fun get(amount: Double, currency: String?): String {
 
         // initial validations
-        number.checkMinSize()
-        number.checkMaxSize()
-        val intPart = number.toInt()
-        val decimalPart = ((number - intPart) * 100).roundToInt()
+        amount.checkMinSize()
+        amount.checkMaxSize()
+        val intPart = amount.toInt()
+        val decimalPart = ((amount - intPart) * 100).roundToInt()
         return (Thousands(intPart).get()
                 + Units(intPart, intPart == 0).get()
                 + Units(intPart).getCurrency(currency)
