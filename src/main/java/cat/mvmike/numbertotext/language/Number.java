@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 
-public enum Literal {
+public enum Number {
 
     N_0(0, "zero"),
 
@@ -67,50 +67,35 @@ public enum Literal {
 
     N_1000(1000, "mil");
 
-    public static final String AND = "i";
-
-    public static final String PLURAL = "s";
-
-    public static final String DASH = "-";
-
-    public static final String SPACE = " ";
-
-    public static final String EMPTY = "";
-
-    public static final String DEC_SEPARATOR = "amb";
-
-    public static final String DEC_CURRENCY = "cèntim";
-
-    private final int number;
+    private final int value;
 
     private final String literal;
 
-    Literal(final int number, final String literal) {
-
-        this.number = number;
+    Number(final int value, final String literal) {
+        this.value = value;
         this.literal = literal;
     }
 
-    public int getNumber() {
-        return number;
+    public int getValue() {
+        return value;
     }
 
     public String getLiteral() {
         return literal;
     }
 
-    public static String getStringLiteral(final int value, final Literal minValue, final Literal maxValue) {
+    public static String getStringLiteral(final int value, final Number minValue, final Number maxValue) {
         return getLiteralOpt(value, minValue, maxValue)
                 .orElseThrow(() -> new IllegalArgumentException(
                         format("No Literal found for value %s between %s and %s", value, minValue, maxValue)
                 )).getLiteral();
     }
 
-    public static Optional<Literal> getLiteralOpt(final int value, final Literal minValue, final Literal maxValue) {
-        return Arrays.stream(Literal.values())
-                .filter(number -> value == number.number)
-                .filter(number -> minValue.number <= number.number)
-                .filter(number -> maxValue.number >= number.number)
+    public static Optional<Number> getLiteralOpt(final int value, final Number minValue, final Number maxValue) {
+        return Arrays.stream(Number.values())
+                .filter(number -> value == number.value)
+                .filter(number -> minValue.value <= number.value)
+                .filter(number -> maxValue.value >= number.value)
                 .findFirst();
     }
 }

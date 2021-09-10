@@ -2,12 +2,11 @@
 // See LICENSE for licensing information
 package cat.mvmike.numbertotext;
 
-import cat.mvmike.numbertotext.language.Literal;
+import cat.mvmike.numbertotext.magnitude.Cents;
+import cat.mvmike.numbertotext.magnitude.Thousands;
+import cat.mvmike.numbertotext.magnitude.Units;
 
 import java.security.InvalidParameterException;
-import java.util.Arrays;
-
-import static cat.mvmike.numbertotext.language.Literal.*;
 
 public class NumberToText {
 
@@ -36,70 +35,11 @@ public class NumberToText {
         int intPart = (int) number;
         int decimalPart = (int) Math.round((number - intPart) * 100);
 
-        return getThousands(intPart)
-                + getUnits(intPart, intPart == 0)
-                + getUnitsCurrency(intPart, currency)
-                + getCents(decimalPart)
-                + getCentsCurrency(decimalPart, currency);
-    }
-
-    private static String getThousands(final int number) {
-        int thousandPart = number / 1000;
-
-        if (thousandPart == N_0.getNumber())
-            return EMPTY;
-
-        if (thousandPart == N_1.getNumber())
-            return N_1000.getLiteral() + SPACE;
-
-        return getUnits(thousandPart, false) + SPACE + N_1000.getLiteral()
-                + (number % 1000 == 0 ? EMPTY : SPACE);
-    }
-
-    private static String getUnits(final int number, final boolean includeZero) {
-        String tens = (number % 100 == 0 && !includeZero ? EMPTY : getTens(number % 100));
-        String hundreds = getHundreds((number / 100) % 10);
-
-        return isEmpty(hundreds) ? tens :
-                isEmpty(tens) ? hundreds : hundreds + SPACE + tens;
-    }
-
-    private static String getTens(final int number) {
-
-        if (number <= N_20.getNumber())
-            return getStringLiteral(number, N_0, N_20);
-
-        if (number <= N_30.getNumber())
-            return N_20.getLiteral() + DASH + AND + DASH + getStringLiteral(number % 10, N_0, N_9);
-
-        return Arrays.stream(new Literal[]{N_90, N_80, N_70, N_60, N_50, N_40, N_30})
-                .filter(l -> number >= l.getNumber())
-                .findFirst()
-                .map(l -> l.getLiteral() + DASH + getStringLiteral(number % 10, N_1, N_9))
-                .orElse(EMPTY);
-    }
-
-    private static String getHundreds(final int number) {
-        return getLiteralOpt(number, N_1, N_9)
-                .map(l -> l == N_1 ? N_100.getLiteral() : l.getLiteral() + DASH + N_100.getLiteral() + PLURAL)
-                .orElse(EMPTY);
-    }
-
-    private static String getUnitsCurrency(final int number, final String currency) {
-        return isEmpty(currency) ? EMPTY : SPACE + currency + (number % 10 != 1 ? PLURAL : EMPTY);
-    }
-
-    private static String getCents(final int number) {
-        String decimalPart = getTens(number);
-        return isEmpty(decimalPart) || N_0.getLiteral().equals(decimalPart) ?
-                EMPTY : SPACE + DEC_SEPARATOR + SPACE + decimalPart;
-    }
-
-    private static String getCentsCurrency(final int number, final String currency) {
-        if (number == N_0.getNumber() || isEmpty(currency))
-            return EMPTY;
-
-        return number == 1 ? SPACE + DEC_CURRENCY : SPACE + DEC_CURRENCY + PLURAL;
+        return Thousands.get(intPart)
+                + new Units(intPart, intPart == 0).get()
+                + new Units(intPart).getCurrency(currency)
+                + new Cents(decimalPart).get()
+                + new Cents(decimalPart).getCurrency(currency);
     }
 
     private static void checkMinSize(final double number) {
@@ -110,9 +50,5 @@ public class NumberToText {
     private static void checkMaxSize(final double number) {
         if (number >= MAX_VALUE)
             throw new InvalidParameterException(MAX_VALUE_ERROR);
-    }
-
-    private static boolean isEmpty(CharSequence cs) {
-        return cs == null || cs.length() == 0;
     }
 }
