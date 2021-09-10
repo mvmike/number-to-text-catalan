@@ -1,82 +1,167 @@
 // Copyright (c) 2016, Miquel Martí <miquelmarti111@gmail.com>
 // See LICENSE for licensing information
-package cat.mvmike.numbertotext;
+package cat.mvmike.numbertotext
 
-import java.util.stream.Stream;
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
+import java.security.InvalidParameterException
+import java.util.stream.Stream
 
-import java.security.InvalidParameterException;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import static cat.mvmike.numbertotext.NumberToText.MAX_VALUE;
-import static cat.mvmike.numbertotext.NumberToText.MIN_VALUE;
-import static cat.mvmike.numbertotext.NumberToText.MIN_VALUE_ERROR;
-import static cat.mvmike.numbertotext.NumberToText.MAX_VALUE_ERROR;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
-public class NumberToTextTest {
+class NumberLiteralToTextTest {
 
     @Test
-    public void getShouldCheckMinValue() {
-
-        NumberToText.get(MIN_VALUE, null);
-
-        try {
-            NumberToText.get(MIN_VALUE - 1, null);
-            fail("should have exploded because of invalid value");
-        } catch (InvalidParameterException ipe) {
-            assertEquals(MIN_VALUE_ERROR, ipe.getMessage());
+    fun shouldCheckMinValue() {
+        NumberToText.get(NumberToText.MIN_VALUE.toDouble(), null)
+        val exception = assertThrows<InvalidParameterException> {
+            NumberToText.get((NumberToText.MIN_VALUE - 1).toDouble(), null)
         }
+
+        assertThat(exception.message).isEqualTo(NumberToText.MIN_VALUE_ERROR)
     }
 
     @Test
-    public void getShouldCheckMaxValue() {
-
-        NumberToText.get(MAX_VALUE - 1, "");
-
-        try {
-            NumberToText.get(MAX_VALUE, "");
-            fail("should have exploded because of invalid value");
-        } catch (InvalidParameterException ipe) {
-            assertEquals(MAX_VALUE_ERROR, ipe.getMessage());
+    fun shouldCheckMaxValue() {
+        NumberToText.get((NumberToText.MAX_VALUE - 1).toDouble(), null)
+        val exception = assertThrows<InvalidParameterException> {
+            NumberToText.get(NumberToText.MAX_VALUE.toDouble(), null)
         }
+        assertThat(exception.message).isEqualTo(NumberToText.MAX_VALUE_ERROR)
     }
 
     @ParameterizedTest
-    @MethodSource("expectedOutputForNumberAndCurrency")
-    public void getShouldReturnCorrectAnswer(String expectedOutput, double number, String currency) {
-        assertEquals(expectedOutput, NumberToText.get(number, currency));
+    @MethodSource("getAmountsAndCurrenciesWithExpectedOutput")
+    fun getShouldReturnCorrectAnswer(testProperties: TestProperties) {
+        val result = NumberToText.get(testProperties.amount, testProperties.currency)
+
+        assertThat(result).isEqualTo(testProperties.expectedOutput)
     }
 
-    private static Stream<Arguments> expectedOutputForNumberAndCurrency() {
-        return Stream.of(
-                Arguments.of("zero", 0, null),
-                Arguments.of("zero euros", 0, "euro"),
-                Arguments.of("zero euros amb vint-i-dos cèntims", 0.22, "euro"),
-                Arguments.of("zero euros amb cinquanta cèntims", 0.5, "euro"),
-                Arguments.of("un euro", 1, "euro"),
-                Arguments.of("dos euros", 2, "euro"),
-                Arguments.of("dos euros amb un cèntim", 2.01, "euro"),
-                Arguments.of("dos euros amb dos cèntims", 2.02, "euro"),
-                Arguments.of("un euro amb trenta-set cèntims", 1.37, "euro"),
-                Arguments.of("vint-i-cinc euros amb noranta-dos cèntims", 25.92, "euro"),
-                Arguments.of("seixanta-vuit euros amb seixanta-dos cèntims", 68.62, "euro"),
-                Arguments.of("cent trenta-tres euros amb cinquanta cèntims", 133.50, "euro"),
-                Arguments.of("sis-cents euros", 600, "euro"),
-                Arguments.of("set-cents cinquanta-cinc amb tretze", 755.13, ""),
-                Arguments.of("mil cent quinze euros amb seixanta-un cèntims", 1115.61, "euro"),
-                Arguments.of("mil set-cents catorze euros", 1714, "euro"),
-                Arguments.of("cinquanta-cinc mil vuit-cents noranta-un amb setanta-sis", 55891.75513, null),
-                Arguments.of("cent mil", 100000, null),
-                Arguments.of("set-cents un mil seixanta euros amb deu cèntims", 701060.1, "euro"),
-                Arguments.of("dos-cents trenta-cinc mil tres-cents seixanta-nou amb setanta-vuit", 235369.78, ""),
-                Arguments.of("cinc-cents mil euros", 500000, "euro"),
-                Arguments.of("set-cents mil euros amb deu cèntims", 700000.1, "euro"),
-                Arguments.of("nou-cents noranta-nou mil nou-cents noranta-nou euros amb noranta-nou cèntims", 999999.99, "euro")
-        );
+    companion object {
+
+        @JvmStatic
+        fun getAmountsAndCurrenciesWithExpectedOutput(): Stream<TestProperties> = Stream.of(
+            TestProperties(
+                amount = 0.0,
+                currency = null, expectedOutput = "zero"),
+            TestProperties(
+                amount = 0.0,
+                currency = "euro",
+                expectedOutput = "zero euros"
+            ),
+            TestProperties(
+                amount = 0.22,
+                currency = "euro",
+                expectedOutput = "zero euros amb vint-i-dos cèntims"
+            ),
+            TestProperties(
+                amount = 0.5,
+                currency = "euro",
+                expectedOutput = "zero euros amb cinquanta cèntims"
+            ),
+            TestProperties(
+                amount = 1.0,
+                currency = "euro",
+                expectedOutput = "un euro"
+            ),
+            TestProperties(
+                amount = 2.0,
+                currency = "euro",
+                expectedOutput = "dos euros"
+            ),
+            TestProperties(
+                amount = 2.01,
+                currency = "euro",
+                expectedOutput = "dos euros amb un cèntim"
+            ),
+            TestProperties(
+                amount = 2.02,
+                currency = "euro",
+                expectedOutput = "dos euros amb dos cèntims"
+            ),
+            TestProperties(
+                amount = 1.37,
+                currency = "euro",
+                expectedOutput = "un euro amb trenta-set cèntims"
+            ),
+            TestProperties(
+                amount = 25.92,
+                currency = "euro",
+                expectedOutput = "vint-i-cinc euros amb noranta-dos cèntims"
+            ),
+            TestProperties(
+                amount = 68.62,
+                currency = "euro",
+                expectedOutput = "seixanta-vuit euros amb seixanta-dos cèntims"
+            ),
+            TestProperties(
+                amount = 133.50,
+                currency = "euro",
+                expectedOutput = "cent trenta-tres euros amb cinquanta cèntims"
+            ),
+            TestProperties(
+                amount = 600.0,
+                currency = "euro",
+                expectedOutput = "sis-cents euros"
+            ),
+            TestProperties(
+                amount = 755.13,
+                currency = "",
+                expectedOutput = "set-cents cinquanta-cinc amb tretze"
+            ),
+            TestProperties(
+                amount = 1115.61,
+                currency = "euro",
+                expectedOutput = "mil cent quinze euros amb seixanta-un cèntims"
+            ),
+            TestProperties(
+                amount = 1714.0,
+                currency = "euro",
+                expectedOutput = "mil set-cents catorze euros"
+            ),
+            TestProperties(
+                amount = 55891.75513,
+                currency = null,
+                expectedOutput = "cinquanta-cinc mil vuit-cents noranta-un amb setanta-sis"
+            ),
+            TestProperties(
+                amount = 100000.0,
+                currency = null,
+                expectedOutput = "cent mil"
+            ),
+            TestProperties(
+                amount = 701060.1,
+                currency = "euro",
+                expectedOutput = "set-cents un mil seixanta euros amb deu cèntims"
+            ),
+            TestProperties(
+                amount = 235369.78,
+                currency = "",
+                expectedOutput = "dos-cents trenta-cinc mil tres-cents seixanta-nou amb setanta-vuit"
+            ),
+            TestProperties(
+                amount = 500000.0,
+                currency = "euro",
+                expectedOutput = "cinc-cents mil euros"
+            ),
+            TestProperties(
+                amount = 700000.1,
+                currency = "euro",
+                expectedOutput = "set-cents mil euros amb deu cèntims"
+            ),
+            TestProperties(
+                amount = 999999.99,
+                currency = "euro",
+                expectedOutput = "nou-cents noranta-nou mil nou-cents noranta-nou euros amb noranta-nou cèntims"
+            )
+        )
     }
+
+    data class TestProperties(
+        val amount: Double,
+        val currency: String?,
+        val expectedOutput: String
+    )
 }

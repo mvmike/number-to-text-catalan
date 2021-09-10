@@ -6,7 +6,7 @@ Working range is [0, 1.000.000)
 
 Static class. Usage example:
 
-```java
+```kotlin
 
 NumberToText.get(1, "euro")
       -->  un euro
