@@ -19,10 +19,13 @@ object NumberToText {
      * to 10^-2
      *
      * @param amount   (total amount, decimals are optional and are rounded up to 10^-2)
-     * @param currency (applies to integers, decimals are always cents. Can be empty)
+     * @param currency (applies to integers, decimals are always cents. Null by default)
      * @return string associated value
      */
-    fun get(amount: Double, currency: String?): String {
+    fun get(
+        amount: Double,
+        currency: String? = null
+    ): String {
 
         // initial validations
         amount.checkMinSize()

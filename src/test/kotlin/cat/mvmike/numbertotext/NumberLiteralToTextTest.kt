@@ -14,9 +14,9 @@ class NumberLiteralToTextTest {
 
     @Test
     fun shouldCheckMinValue() {
-        NumberToText.get(NumberToText.MIN_VALUE.toDouble(), null)
+        NumberToText.get(NumberToText.MIN_VALUE.toDouble())
         val exception = assertThrows<InvalidParameterException> {
-            NumberToText.get((NumberToText.MIN_VALUE - 1).toDouble(), null)
+            NumberToText.get((NumberToText.MIN_VALUE - 1).toDouble())
         }
 
         assertThat(exception.message).isEqualTo(NumberToText.MIN_VALUE_ERROR)
@@ -24,9 +24,9 @@ class NumberLiteralToTextTest {
 
     @Test
     fun shouldCheckMaxValue() {
-        NumberToText.get((NumberToText.MAX_VALUE - 1).toDouble(), null)
+        NumberToText.get((NumberToText.MAX_VALUE - 1).toDouble())
         val exception = assertThrows<InvalidParameterException> {
-            NumberToText.get(NumberToText.MAX_VALUE.toDouble(), null)
+            NumberToText.get(NumberToText.MAX_VALUE.toDouble())
         }
         assertThat(exception.message).isEqualTo(NumberToText.MAX_VALUE_ERROR)
     }
@@ -45,7 +45,8 @@ class NumberLiteralToTextTest {
         fun getAmountsAndCurrenciesWithExpectedOutput(): Stream<TestProperties> = Stream.of(
             TestProperties(
                 amount = 0.0,
-                currency = null, expectedOutput = "zero"),
+                currency = null,
+                expectedOutput = "zero"),
             TestProperties(
                 amount = 0.0,
                 currency = "euro",

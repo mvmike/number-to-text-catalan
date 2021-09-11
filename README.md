@@ -23,7 +23,7 @@ NumberToText.get(755.13, "")
 NumberToText.get(1714, "euro")
      -->  mil set-cents catorze euros
 
-NumberToText.get(55891.75513, "")
+NumberToText.get(55891.75513)
      -->  cinquanta-cinc mil vuit-cents noranta-un amb setanta-sis
 
 NumberToText.get(701060.1, "euro")
