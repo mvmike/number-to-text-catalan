@@ -58,6 +58,11 @@ class NumberLiteralToTextTest {
                 expectedOutput = "zero euros amb vint-i-dos cèntims"
             ),
             TestProperties(
+                amount = 0.57,
+                currency = null,
+                expectedOutput = "zero amb cinquanta-set"
+            ),
+            TestProperties(
                 amount = 0.5,
                 currency = "euro",
                 expectedOutput = "zero euros amb cinquanta cèntims"
