@@ -8,6 +8,9 @@ Static class. Usage example:
 
 ```kotlin
 
+NumberToText.get(0.57, null)
+      -->  zero amb cinquanta-set
+
 NumberToText.get(1, "euro")
       -->  un euro
 
