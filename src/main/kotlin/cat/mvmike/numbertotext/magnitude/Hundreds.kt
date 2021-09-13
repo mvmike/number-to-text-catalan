@@ -29,4 +29,6 @@ class Hundreds(private val number: Int) {
     }
 }
 
-fun Int.isMultipleOfHundreds() = N_0.value == (this % N_100.value)
+fun Int.modOfHundred() = this % N_100.value
+
+fun Int.isMultipleOfHundreds() = N_0.value == this.modOfHundred()

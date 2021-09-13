@@ -15,9 +15,9 @@ class Units(
     fun get(): String {
         val tens = when {
             number.isMultipleOfHundreds() && !includeZero -> EMPTY
-            else -> Tens(number % N_100.value).get()
+            else -> Tens(number.modOfHundred()).get()
         }
-        val hundreds = Hundreds((number / N_100.value) % N_10.value).get()
+        val hundreds = Hundreds((number / N_100.value).modOfTen()).get()
 
         return when {
             hundreds.isEmpty() -> tens
@@ -32,7 +32,7 @@ class Units(
     }
 
     private fun addPluralIfNeeded() = when (N_1.value) {
-        number % N_10.value -> EMPTY
+        number.modOfTen() -> EMPTY
         else -> PLURAL
     }
 }
