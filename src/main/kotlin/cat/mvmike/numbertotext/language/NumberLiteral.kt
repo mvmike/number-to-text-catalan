@@ -53,8 +53,7 @@ fun getLiteral(value: Int, minValue: NumberLiteral, maxValue: NumberLiteral) =
     NumberLiteral.values()
         .filter { value == it.value }
         .filter { minValue.value <= it.value }
-        .filter { maxValue.value >= it.value }
-        .firstOrNull()
+        .firstOrNull { maxValue.value >= it.value }
 
 fun Int.isEqualTo(numberLiteral: NumberLiteral) = this == numberLiteral.value
 
