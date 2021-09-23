@@ -11,8 +11,10 @@
 
     <properties>
 
+        <!-- https://kotlinlang.org/docs/releases.html#release-details -->
         <kotlin.version>1.5.30</kotlin.version>
 
+        <!-- https://www.java.com/releases/ -->
         <java.version>15</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
