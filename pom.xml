@@ -14,7 +14,7 @@
         <!-- https://kotlinlang.org/docs/releases.html#release-details -->
         <kotlin.version>1.5.31</kotlin.version>
 
-        <!-- https://www.java.com/releases/ -->
+        <!-- https://www.java.com/releases -->
         <java.version>15</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -26,6 +26,9 @@
 
         <!-- https://github.com/junit-team/junit5/releases -->
         <junit.jupiter.params.version>5.8.1</junit.jupiter.params.version>
+
+        <!-- https://maven.apache.org/surefire/maven-surefire-plugin -->
+        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
 
     </properties>
 
@@ -96,7 +99,11 @@
                     <jvmTarget>${java.version}</jvmTarget>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
         </plugins>
     </build>
 
