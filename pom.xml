@@ -25,7 +25,7 @@
         <assertj.version>3.23.1</assertj.version>
 
         <!-- https://github.com/junit-team/junit5/releases -->
-        <junit.jupiter.params.version>5.8.2</junit.jupiter.params.version>
+        <junit.jupiter.params.version>5.9.0</junit.jupiter.params.version>
 
         <!-- https://maven.apache.org/surefire/maven-surefire-plugin -->
         <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
