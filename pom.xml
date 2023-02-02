@@ -12,7 +12,7 @@
     <properties>
 
         <!-- https://kotlinlang.org/docs/releases.html#release-details -->
-        <kotlin.version>1.8.0</kotlin.version>
+        <kotlin.version>1.8.10</kotlin.version>
 
         <!-- https://www.java.com/releases -->
         <java.version>17</java.version>
