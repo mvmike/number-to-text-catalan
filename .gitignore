@@ -1,9 +1,10 @@
-# Intellij
-
-.idea
 *.iml
+*.log
+*.hprof
+.idea/
 
-# Build
+.gradle/
+local.properties
 
-target/
-bin/
+build/
+release/
