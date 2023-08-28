@@ -4,6 +4,8 @@ plugins {
     application
     // https://kotlinlang.org/docs/releases.html#release-details
     kotlin("jvm") version "1.9.10"
+    // https://github.com/jeremymailen/kotlinter-gradle/releases
+    id("org.jmailen.kotlinter") version "3.16.0"
 }
 
 
@@ -46,6 +48,8 @@ tasks.apply {
 }
 
 defaultTasks(
+    //"formatKotlin",
+    "lintKotlin",
     "clean",
     "build"
 )

@@ -5,7 +5,8 @@ package cat.mvmike.numbertotext.magnitude
 import cat.mvmike.numbertotext.language.Constants.EMPTY
 import cat.mvmike.numbertotext.language.Constants.PLURAL
 import cat.mvmike.numbertotext.language.Constants.SPACE
-import cat.mvmike.numbertotext.language.NumberLiteral.*
+import cat.mvmike.numbertotext.language.NumberLiteral.N_1
+import cat.mvmike.numbertotext.language.NumberLiteral.N_100
 
 class Units(
     private val number: Int,
@@ -36,6 +37,3 @@ class Units(
         else -> PLURAL
     }
 }
-
-
-

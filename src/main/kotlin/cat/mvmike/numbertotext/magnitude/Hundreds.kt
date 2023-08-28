@@ -6,7 +6,17 @@ import cat.mvmike.numbertotext.language.Constants.DASH
 import cat.mvmike.numbertotext.language.Constants.EMPTY
 import cat.mvmike.numbertotext.language.Constants.PLURAL
 import cat.mvmike.numbertotext.language.NumberLiteral
-import cat.mvmike.numbertotext.language.NumberLiteral.*
+import cat.mvmike.numbertotext.language.NumberLiteral.N_0
+import cat.mvmike.numbertotext.language.NumberLiteral.N_1
+import cat.mvmike.numbertotext.language.NumberLiteral.N_100
+import cat.mvmike.numbertotext.language.NumberLiteral.N_2
+import cat.mvmike.numbertotext.language.NumberLiteral.N_3
+import cat.mvmike.numbertotext.language.NumberLiteral.N_4
+import cat.mvmike.numbertotext.language.NumberLiteral.N_5
+import cat.mvmike.numbertotext.language.NumberLiteral.N_6
+import cat.mvmike.numbertotext.language.NumberLiteral.N_7
+import cat.mvmike.numbertotext.language.NumberLiteral.N_8
+import cat.mvmike.numbertotext.language.NumberLiteral.N_9
 import cat.mvmike.numbertotext.language.getLiteral
 
 class Hundreds(private val number: Int) {

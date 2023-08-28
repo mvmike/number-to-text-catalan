@@ -7,8 +7,9 @@ import cat.mvmike.numbertotext.language.Constants.DEC_SEPARATOR
 import cat.mvmike.numbertotext.language.Constants.EMPTY
 import cat.mvmike.numbertotext.language.Constants.PLURAL
 import cat.mvmike.numbertotext.language.Constants.SPACE
+import cat.mvmike.numbertotext.language.NumberLiteral.N_0
+import cat.mvmike.numbertotext.language.NumberLiteral.N_1
 import cat.mvmike.numbertotext.language.isEqualTo
-import cat.mvmike.numbertotext.language.NumberLiteral.*
 
 class Cents(private val number: Int) {
 

@@ -46,7 +46,8 @@ class NumberLiteralToTextTest {
             TestProperties(
                 amount = 0.0,
                 currency = null,
-                expectedOutput = "zero"),
+                expectedOutput = "zero"
+            ),
             TestProperties(
                 amount = 0.0,
                 currency = "euro",

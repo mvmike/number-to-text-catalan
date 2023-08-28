@@ -6,7 +6,18 @@ import cat.mvmike.numbertotext.language.Constants.AND
 import cat.mvmike.numbertotext.language.Constants.DASH
 import cat.mvmike.numbertotext.language.Constants.EMPTY
 import cat.mvmike.numbertotext.language.NumberLiteral
-import cat.mvmike.numbertotext.language.NumberLiteral.*
+import cat.mvmike.numbertotext.language.NumberLiteral.N_0
+import cat.mvmike.numbertotext.language.NumberLiteral.N_1
+import cat.mvmike.numbertotext.language.NumberLiteral.N_10
+import cat.mvmike.numbertotext.language.NumberLiteral.N_20
+import cat.mvmike.numbertotext.language.NumberLiteral.N_30
+import cat.mvmike.numbertotext.language.NumberLiteral.N_40
+import cat.mvmike.numbertotext.language.NumberLiteral.N_50
+import cat.mvmike.numbertotext.language.NumberLiteral.N_60
+import cat.mvmike.numbertotext.language.NumberLiteral.N_70
+import cat.mvmike.numbertotext.language.NumberLiteral.N_80
+import cat.mvmike.numbertotext.language.NumberLiteral.N_9
+import cat.mvmike.numbertotext.language.NumberLiteral.N_90
 import cat.mvmike.numbertotext.language.getStringLiteral
 
 class Tens(private val number: Int) {

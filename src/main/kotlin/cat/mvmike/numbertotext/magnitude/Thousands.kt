@@ -4,7 +4,9 @@ package cat.mvmike.numbertotext.magnitude
 
 import cat.mvmike.numbertotext.language.Constants.EMPTY
 import cat.mvmike.numbertotext.language.Constants.SPACE
-import cat.mvmike.numbertotext.language.NumberLiteral.*
+import cat.mvmike.numbertotext.language.NumberLiteral.N_0
+import cat.mvmike.numbertotext.language.NumberLiteral.N_1
+import cat.mvmike.numbertotext.language.NumberLiteral.N_1000
 import cat.mvmike.numbertotext.language.isEqualTo
 
 class Thousands(private val number: Int) {
