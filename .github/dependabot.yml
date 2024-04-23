@@ -1,4 +1,4 @@
-#https://dependabot.com/docs/config-file
+# https://dependabot.com/docs/config-file
 version: 2
 updates:
 
@@ -7,7 +7,7 @@ updates:
     schedule:
       interval: "daily"
 
-  - package-ecosystem: "maven"
+  - package-ecosystem: "gradle"
     directory: "/"
     schedule:
       interval: "daily"
