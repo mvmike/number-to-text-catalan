@@ -5,7 +5,7 @@ plugins {
     // https://kotlinlang.org/docs/releases.html#release-details
     kotlin("jvm") version "1.9.23"
     // https://github.com/jeremymailen/kotlinter-gradle/releases
-    id("org.jmailen.kotlinter") version "3.16.0"
+    id("org.jmailen.kotlinter") version "4.3.0"
 }
 
 

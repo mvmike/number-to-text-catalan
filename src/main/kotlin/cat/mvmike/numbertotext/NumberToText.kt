@@ -31,13 +31,11 @@ object NumberToText {
         amount.checkMaxSize()
         val intPart = amount.toInt()
         val decimalPart = ((amount - intPart) * 100).roundToInt()
-        return (
-            Thousands(intPart).get() +
-                Units(intPart, intPart == 0).get() +
-                Units(intPart).getCurrency(currency) +
-                Cents(decimalPart).get() +
-                Cents(decimalPart).getCurrency(currency)
-            )
+        return Thousands(intPart).get() +
+            Units(intPart, intPart == 0).get() +
+            Units(intPart).getCurrency(currency) +
+            Cents(decimalPart).get() +
+            Cents(decimalPart).getCurrency(currency)
     }
 
     private fun Double.checkMinSize() {
