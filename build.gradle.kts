@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     // https://kotlinlang.org/docs/releases.html#release-details
-    kotlin("jvm") version "1.9.23"
+    kotlin("jvm") version "1.9.24"
     // https://github.com/jeremymailen/kotlinter-gradle/releases
     id("org.jmailen.kotlinter") version "4.3.0"
 }
