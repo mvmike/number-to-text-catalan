@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -15,7 +17,7 @@ group = "cat.mvmike.numbertotext"
 version = "1.0.0"
 
 // https://adoptium.net/temurin/releases/
-val javaVersion = JavaVersion.VERSION_17
+val javaVersion = JavaVersion.VERSION_21
 java.sourceCompatibility = javaVersion
 
 repositories {
@@ -38,8 +40,8 @@ dependencies {
 tasks.apply {
 
     withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = javaVersion.toString()
+        compilerOptions {
+            jvmTarget.set(JvmTarget.valueOf("JVM_$javaVersion"))
         }
     }
 
