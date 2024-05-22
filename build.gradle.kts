@@ -6,6 +6,8 @@ plugins {
     kotlin("jvm") version "1.9.24"
     // https://github.com/jeremymailen/kotlinter-gradle/releases
     id("org.jmailen.kotlinter") version "4.3.0"
+    // https://github.com/Kotlin/kotlinx-kover/releases
+    id("org.jetbrains.kotlinx.kover") version "0.8.0"
 }
 
 
@@ -47,9 +49,23 @@ tasks.apply {
     }
 }
 
+kover {
+    reports {
+        verify {
+            rule {
+                bound {
+                    minValue = 90
+                }
+            }
+        }
+    }
+}
+
 defaultTasks(
     //"formatKotlin",
     "lintKotlin",
     "clean",
+    //"koverHtmlReport",
+    "koverVerify",
     "build"
 )
