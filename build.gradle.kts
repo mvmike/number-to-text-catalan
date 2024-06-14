@@ -1,3 +1,7 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
+import org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED
+import org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR
+import org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT
 import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -48,6 +52,24 @@ tasks.apply {
     test {
         enableAssertions = true
         useJUnitPlatform()
+        testLogging {
+            events(SKIPPED, FAILED, STANDARD_ERROR, STANDARD_OUT)
+        }
+        afterSuite(
+            KotlinClosure2(
+                { desc: TestDescriptor, result: TestResult ->
+                    desc.parent
+                        ?.let { return@KotlinClosure2 } // only the outermost suite
+                        ?: println(
+                            "${result.resultType} (" +
+                                "${result.testCount} tests - " +
+                                "${result.successfulTestCount} successes, " +
+                                "${result.failedTestCount} failures, " +
+                                "${result.skippedTestCount} skipped)"
+                        )
+                }
+            )
+        )
     }
 }
 
