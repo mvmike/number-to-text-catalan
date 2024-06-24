@@ -19,7 +19,9 @@ import cat.mvmike.numbertotext.language.NumberLiteral.N_8
 import cat.mvmike.numbertotext.language.NumberLiteral.N_9
 import cat.mvmike.numbertotext.language.getLiteral
 
-class Hundreds(private val number: Int) {
+class Hundreds(
+    private val number: Int
+) {
 
     fun get() = getLiteral(number, N_1, N_9)
         ?.toFormattedString()

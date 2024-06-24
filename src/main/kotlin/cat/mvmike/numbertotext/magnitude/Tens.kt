@@ -20,7 +20,9 @@ import cat.mvmike.numbertotext.language.NumberLiteral.N_9
 import cat.mvmike.numbertotext.language.NumberLiteral.N_90
 import cat.mvmike.numbertotext.language.getStringLiteral
 
-class Tens(private val number: Int) {
+class Tens(
+    private val number: Int
+) {
 
     fun get() = when {
         number <= N_20.value -> getStringLiteral(number, N_0, N_20)

@@ -49,7 +49,8 @@ fun getStringLiteral(value: Int, minValue: NumberLiteral, maxValue: NumberLitera
     )
 
 fun getLiteral(value: Int, minValue: NumberLiteral, maxValue: NumberLiteral) =
-    NumberLiteral.values()
+    NumberLiteral
+        .values()
         .filter { value == it.value }
         .filter { minValue.value <= it.value }
         .firstOrNull { maxValue.value >= it.value }

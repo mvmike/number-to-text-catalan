@@ -11,7 +11,9 @@ import cat.mvmike.numbertotext.language.NumberLiteral.N_0
 import cat.mvmike.numbertotext.language.NumberLiteral.N_1
 import cat.mvmike.numbertotext.language.isEqualTo
 
-class Cents(private val number: Int) {
+class Cents(
+    private val number: Int
+) {
 
     fun get(): String {
         val decimalPart = Tens(number).get()

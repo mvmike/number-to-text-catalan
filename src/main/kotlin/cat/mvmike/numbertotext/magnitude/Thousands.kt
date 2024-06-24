@@ -9,7 +9,9 @@ import cat.mvmike.numbertotext.language.NumberLiteral.N_1
 import cat.mvmike.numbertotext.language.NumberLiteral.N_1000
 import cat.mvmike.numbertotext.language.isEqualTo
 
-class Thousands(private val number: Int) {
+class Thousands(
+    private val number: Int
+) {
 
     fun get(): String {
         val thousandPart = number / N_1000.value
