@@ -36,6 +36,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // https://github.com/assertj/assertj-core/tags
     testImplementation("org.assertj:assertj-core:3.26.3")
