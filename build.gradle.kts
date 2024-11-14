@@ -29,8 +29,6 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
-
     // https://github.com/junit-team/junit5/releases
     val junitJupiterVersion = "5.11.3"
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
