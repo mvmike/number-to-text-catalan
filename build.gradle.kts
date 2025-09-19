@@ -36,7 +36,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // https://github.com/assertj/assertj-core/tags
-    testImplementation("org.assertj:assertj-core:3.27.4")
+    testImplementation("org.assertj:assertj-core:3.27.5")
 }
 
 tasks.apply {
