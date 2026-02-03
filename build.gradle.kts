@@ -84,10 +84,9 @@ kover {
 }
 
 defaultTasks(
-    //"formatKotlin",
     "lintKotlin",
     "clean",
-    //"koverHtmlReport",
     "koverVerify",
+    "koverLog",
     "build"
 )
