@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     // https://kotlinlang.org/docs/releases.html#release-details
-    kotlin("jvm") version "2.3.10"
+    kotlin("jvm") version "2.3.20"
     // https://github.com/jeremymailen/kotlinter-gradle/releases
     id("org.jmailen.kotlinter") version "5.4.2"
     // https://github.com/Kotlin/kotlinx-kover/releases
