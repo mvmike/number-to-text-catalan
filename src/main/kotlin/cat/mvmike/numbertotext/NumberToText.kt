@@ -27,8 +27,7 @@ object NumberToText {
         currency: String? = null
     ): String {
         // initial validations
-        amount.checkMinSize()
-        amount.checkMaxSize()
+        amount.checkInputRange()
         val intPart = amount.toInt()
         val decimalPart = ((amount - intPart) * 100).roundToInt()
         return Thousands(intPart).get() +
@@ -38,11 +37,9 @@ object NumberToText {
             Cents(decimalPart).getCurrency(currency)
     }
 
-    private fun Double.checkMinSize() {
-        if (this < MIN_VALUE) throw InvalidParameterException(MIN_VALUE_ERROR)
-    }
-
-    private fun Double.checkMaxSize() {
-        if (this >= MAX_VALUE) throw InvalidParameterException(MAX_VALUE_ERROR)
+    private fun Double.checkInputRange(): Unit = when {
+        this < MIN_VALUE -> throw InvalidParameterException(MIN_VALUE_ERROR)
+        this >= MAX_VALUE -> throw InvalidParameterException(MAX_VALUE_ERROR)
+        else -> {}
     }
 }
