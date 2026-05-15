@@ -37,9 +37,9 @@ object NumberToText {
             Cents(decimalPart).getCurrency(currency)
     }
 
-    private fun Double.checkInputRange(): Unit = when {
+    private fun Double.checkInputRange() = when {
         this < MIN_VALUE -> throw InvalidParameterException(MIN_VALUE_ERROR)
         this >= MAX_VALUE -> throw InvalidParameterException(MAX_VALUE_ERROR)
-        else -> {}
+        else -> Unit
     }
 }
