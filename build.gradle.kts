@@ -20,7 +20,7 @@ group = "cat.mvmike.numbertotext"
 version = "1.0.0"
 
 // https://adoptium.net/temurin/releases/
-val javaVersion = JavaVersion.VERSION_21
+val javaVersion = JavaVersion.VERSION_25
 java.sourceCompatibility = javaVersion
 
 repositories {
