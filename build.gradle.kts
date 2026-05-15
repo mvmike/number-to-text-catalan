@@ -51,23 +51,25 @@ tasks.apply {
         enableAssertions = true
         useJUnitPlatform()
         testLogging {
-            events(SKIPPED, FAILED, STANDARD_ERROR, STANDARD_OUT)
+            events(SKIPPED, FAILED)
         }
-        afterSuite(
-            KotlinClosure2(
-                { desc: TestDescriptor, result: TestResult ->
-                    desc.parent
-                        ?.let { return@KotlinClosure2 } // only the outermost suite
-                        ?: println(
-                            "${result.resultType} (" +
-                                "${result.testCount} tests - " +
-                                "${result.successfulTestCount} successes, " +
-                                "${result.failedTestCount} failures, " +
-                                "${result.skippedTestCount} skipped)"
-                        )
+        addTestListener(object : TestListener {
+            override fun beforeSuite(suite: TestDescriptor) {}
+            override fun beforeTest(testDescriptor: TestDescriptor) {}
+            override fun afterTest(testDescriptor: TestDescriptor, result: TestResult) {}
+            override fun afterSuite(suite: TestDescriptor, result: TestResult) {
+                // only print outermost Gradle Test Executor results
+                suite.className ?: suite.parent?.let {
+                    println(
+                        "${result.resultType} " +
+                            "(${result.testCount} tests - " +
+                            "${result.successfulTestCount} successes, " +
+                            "${result.failedTestCount} failures, " +
+                            "${result.skippedTestCount} skipped)"
+                    )
                 }
-            )
-        )
+            }
+        })
     }
 }
 
