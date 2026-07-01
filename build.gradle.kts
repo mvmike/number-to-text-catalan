@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
     // https://github.com/junit-team/junit5/releases
-    val junitJupiterVersion = "6.1.0"
+    val junitJupiterVersion = "6.1.1"
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
