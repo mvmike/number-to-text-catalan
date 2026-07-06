@@ -8,7 +8,7 @@ plugins {
     // https://kotlinlang.org/docs/releases.html#release-details
     kotlin("jvm") version "2.4.0"
     // https://github.com/jeremymailen/kotlinter-gradle/releases
-    id("org.jmailen.kotlinter") version "5.5.0"
+    id("org.jmailen.kotlinter") version "5.6.0"
     // https://github.com/Kotlin/kotlinx-kover/releases
     id("org.jetbrains.kotlinx.kover") version "0.9.8"
 }
